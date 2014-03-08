@@ -67,12 +67,17 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	private ArrayList<Quest> act3List;
 	private ArrayList<Quest> act4List;
 	
+	private boolean fullActCompleted[] = new boolean[4];
+
+	private static String battleTagFull;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quests_activity_swipe);
 
 		heroId = getIntent().getExtras().getInt("heroId");
+		battleTagFull = getIntent().getExtras().getString("battleTagFull");
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -233,7 +238,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	    	questListView.setAdapter(adapter);
 	    	
 			// Gets the URL from the UI's text field.
-	        String stringUrl = "http://us.battle.net/api/d3/profile/zzilong-1758/hero/" + heroId;
+	        String stringUrl = String.format("http://us.battle.net/api/d3/profile/%s/hero/%d",
+	        		battleTagFull, heroId);
 	        ConnectivityManager connMgr = (ConnectivityManager) 
 	            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

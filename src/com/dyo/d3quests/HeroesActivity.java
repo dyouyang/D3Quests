@@ -43,6 +43,7 @@ public class HeroesActivity extends Activity {
 	private ListView heroesView;
 	
 	private String battleTag;
+	private String battleTagNum;
 	HashMap<String, Integer> heroesMap = new HashMap<String, Integer>();
 	ArrayList<Hero> heroesList = new ArrayList<Hero>();
 	ArrayAdapter<Hero> adapter;
@@ -61,8 +62,8 @@ public class HeroesActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				String battleTag = battleTagInput.getText().toString();
-				String battleTagNum = battleTagNumInput.getText().toString();
+				battleTag = battleTagInput.getText().toString();
+				battleTagNum = battleTagNumInput.getText().toString();
 				// Gets the URL from the UI's text field.
 		        String stringUrl = String.format("http://us.battle.net/api/d3/profile/%s-%s/",
 		        		battleTag, battleTagNum);
@@ -95,6 +96,7 @@ public class HeroesActivity extends Activity {
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)adapter.getItem(position);
 				i.putExtra("heroId", hero.id);
+				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
 				startActivity(i);
 			}
 		});
