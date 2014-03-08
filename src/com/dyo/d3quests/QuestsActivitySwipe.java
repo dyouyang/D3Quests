@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -67,7 +68,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	private ArrayList<Quest> act3List;
 	private ArrayList<Quest> act4List;
 	
-	private boolean fullActCompleted[] = new boolean[4];
+	private static boolean fullActCompleted[] = new boolean[4];
 
 	private static String battleTagFull;
 	
@@ -216,6 +217,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		private ArrayList<Quest> act1List = new ArrayList<Quest>();
 		ArrayAdapter<Quest> adapter;
 		private int act;
+		
+		TextView fullCompleted;
 		public DummySectionFragment() {
 		}
 
@@ -225,10 +228,10 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			View rootView = inflater.inflate(
 					R.layout.fragment_quests_activity_swipe_dummy, container,
 					false);
-			TextView dummyTextView = (TextView) rootView
+			fullCompleted = (TextView) rootView
 					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+			//fullCompleted.setText(Integer.toString(getArguments().getInt(
+					//ARG_SECTION_NUMBER)));
 			act = getArguments().getInt(
 					ARG_SECTION_NUMBER);
 			initAllQuests(act);
@@ -266,6 +269,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				act1List.add(new Quest("return-to-new-tristram", "Return to New Tristram"));
 			}
 			if (act == 2) {
+				// TODO: What's up with blood and sand? doesn't come back in API
 				act1List.add(new Quest("shadows-in-the-desert", "Shadows in the Desert"));
 				act1List.add(new Quest("the-road-to-alcarnus", "The Road to Alcarnus"));
 				act1List.add(new Quest("city-of-blood", "City of Blood"));
@@ -299,6 +303,13 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        	parseHero(result);
 	        	//heroName.setText(name);
 	        	adapter.notifyDataSetChanged();
+	        	if (fullActCompleted[act-1]) {
+	        		fullCompleted.setText("Act quests completed");
+	        		fullCompleted.setBackgroundColor(Color.GREEN);
+	        	} else {
+	        		fullCompleted.setText("Act not completed");
+	        		fullCompleted.setBackgroundColor(Color.RED);
+	        	}
 	        	// TODO: Handle updates better (without notifying).
 	            //missingQuests.setText(heroesList.toString());
 
@@ -344,6 +355,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				//name = (String) hero.getString("name");
 				JSONObject normalQuests = hero.getJSONObject("progress").getJSONObject("normal");
 				JSONObject act1 = normalQuests.getJSONObject("act"+act);
+				boolean completed = act1.getBoolean("completed");
+				fullActCompleted[act-1] = completed;
 				JSONArray quests1 = act1.getJSONArray("completedQuests");
 				for (int i = 0; i < quests1.length(); i++) {
 					JSONObject quest = quests1.getJSONObject(i);
