@@ -4,16 +4,24 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
 public class QuestsActivity extends Activity {
 
+	private int heroId;
+	private TextView heroName;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quests);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		heroId = getIntent().getExtras().getInt("heroId");
+		heroName = (TextView)findViewById(R.id.hero_name);
+		heroName.setText("" + heroId);
 	}
 
 	/**
