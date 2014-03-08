@@ -210,7 +210,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		private ArrayList<Quest> act1List = new ArrayList<Quest>();
 		ArrayAdapter<Quest> adapter;
-		
+		private int act;
 		public DummySectionFragment() {
 		}
 
@@ -224,8 +224,9 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 					.findViewById(R.id.section_label);
 			dummyTextView.setText(Integer.toString(getArguments().getInt(
 					ARG_SECTION_NUMBER)));
-			
-			initAllQuests();
+			act = getArguments().getInt(
+					ARG_SECTION_NUMBER);
+			initAllQuests(act);
 			ListView questListView = (ListView) rootView.findViewById(R.id.quest_list2);
 		    adapter = new ArrayAdapter<Quest>(this.getActivity(), 
 	    	        android.R.layout.simple_list_item_1, act1List);	
@@ -244,18 +245,32 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			return rootView;
 		}
 		
-		private void initAllQuests() {
+		private void initAllQuests(int act) {
 			act1List.clear();
-			act1List.add(new Quest("the-fallen-star", "The Fallen Star"));
-			act1List.add(new Quest("the-legacy-of-cain", "The Legacy of Cain"));
-			act1List.add(new Quest("a-shattered-crown", "A Shattered Crown"));
-			act1List.add(new Quest("reign-of-the-black-king", "Reign of the Black King"));
-			act1List.add(new Quest("sword-of-the-stranger", "Sword of the Stranger"));
-			act1List.add(new Quest("the-broken-blade", "The Broken Blade"));
-			act1List.add(new Quest("the-doom-in-wortham", "The Doom in Wortham"));
-			act1List.add(new Quest("trailing-the-coven", "Trailing the Coven"));
-			act1List.add(new Quest("the-imprisoned-angel", "The Imprisoned Angel"));
-			act1List.add(new Quest("return-to-new-tristram", "Return to New Tristram"));
+			if (act == 1) {
+				act1List.add(new Quest("the-fallen-star", "The Fallen Star"));
+				act1List.add(new Quest("the-legacy-of-cain", "The Legacy of Cain"));
+				act1List.add(new Quest("a-shattered-crown", "A Shattered Crown"));
+				act1List.add(new Quest("reign-of-the-black-king", "Reign of the Black King"));
+				act1List.add(new Quest("sword-of-the-stranger", "Sword of the Stranger"));
+				act1List.add(new Quest("the-broken-blade", "The Broken Blade"));
+				act1List.add(new Quest("the-doom-in-wortham", "The Doom in Wortham"));
+				act1List.add(new Quest("trailing-the-coven", "Trailing the Coven"));
+				act1List.add(new Quest("the-imprisoned-angel", "The Imprisoned Angel"));
+				act1List.add(new Quest("return-to-new-tristram", "Return to New Tristram"));
+			}
+			if (act == 2) {
+				act1List.add(new Quest("shadows-in-the-desert", "Shadows in the Desert"));
+				act1List.add(new Quest("the-road-to-alcarnus", "The Road to Alcarnus"));
+				act1List.add(new Quest("city-of-blood", "City of Blood"));
+				act1List.add(new Quest("a-royal-audience", "A Royal Audience"));
+				act1List.add(new Quest("unexpected-allies", "Unexpected Allies"));
+				act1List.add(new Quest("betrayer-of-the-horadrim", "Betrayer of the Horadrim"));
+				act1List.add(new Quest("blood-and-sand", "Blood and Sand"));
+				act1List.add(new Quest("the-black-soulstone", "The Black Soulstone"));
+				act1List.add(new Quest("the-scouring-of-caldeum", "The Scouring of Caldeum"));
+				act1List.add(new Quest("lord-of-lies", "Lord of Lies"));
+			}
 		}
 		
 		
@@ -322,7 +337,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				JSONObject hero = new JSONObject(result);
 				//name = (String) hero.getString("name");
 				JSONObject normalQuests = hero.getJSONObject("progress").getJSONObject("normal");
-				JSONObject act1 = normalQuests.getJSONObject("act1");
+				JSONObject act1 = normalQuests.getJSONObject("act"+act);
 				JSONArray quests1 = act1.getJSONArray("completedQuests");
 				for (int i = 0; i < quests1.length(); i++) {
 					JSONObject quest = quests1.getJSONObject(i);
