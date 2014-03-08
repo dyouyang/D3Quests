@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:focusableInTouchMode="true"
     tools:context=".HeroesActivity" >
 
     <EditText
@@ -13,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:ems="10" />
+        android:layout_toLeftOf="@+id/textView1"
+        android:ems="10" 
+        android:text="zzilong"/>
 
     <Button
         android:id="@+id/findQuests"
@@ -31,5 +33,25 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/findQuests" >
     </ListView>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/battletag"
+        android:layout_alignBottom="@+id/battletag"
+        android:layout_centerHorizontal="true"
+        android:text="#" />
+
+    <EditText
+        android:id="@+id/battletag_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/battletag"
+        android:layout_toRightOf="@+id/textView1"
+        android:ems="10" 
+        android:text="1758">
+
+    </EditText>
 
 </RelativeLayout>

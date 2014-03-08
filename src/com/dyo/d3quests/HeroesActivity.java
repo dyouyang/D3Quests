@@ -38,6 +38,7 @@ import android.widget.TextView;
 public class HeroesActivity extends Activity {
 
 	private EditText battleTagInput;
+	private EditText battleTagNumInput;
 	private Button findQuests;
 	private ListView heroesView;
 	
@@ -53,15 +54,18 @@ public class HeroesActivity extends Activity {
 		
 		
 		battleTagInput = (EditText) findViewById(R.id.battletag);
+		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
 		
 		findQuests = (Button) findViewById(R.id.findQuests);
 		findQuests.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				
+				String battleTag = battleTagInput.getText().toString();
+				String battleTagNum = battleTagNumInput.getText().toString();
 				// Gets the URL from the UI's text field.
-		        String stringUrl = "http://us.battle.net/api/d3/profile/zzilong-1758/";
+		        String stringUrl = String.format("http://us.battle.net/api/d3/profile/%s-%s/",
+		        		battleTag, battleTagNum);
 		        ConnectivityManager connMgr = (ConnectivityManager) 
 		            getSystemService(Context.CONNECTIVITY_SERVICE);
 		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
