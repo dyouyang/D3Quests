@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -65,8 +66,7 @@ public class HeroesActivity extends Activity {
 		        }
 		        
 				battleTag = battleTagInput.getText().toString();
-				missingQuests.setText(battleTag);
-				
+				missingQuests.setText(battleTag);				
 			}
 		});
 		
