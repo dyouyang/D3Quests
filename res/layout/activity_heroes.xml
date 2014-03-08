@@ -8,11 +8,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HeroesActivity" >
 
-
-
     <EditText
         android:id="@+id/battletag"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -20,11 +18,11 @@
 
     <Button
         android:id="@+id/findQuests"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/battletag"
         android:layout_centerHorizontal="true"
-        android:text="Button" />
+        android:text="Get heroes" />
 
     <ListView
         android:id="@+id/missingQuests"

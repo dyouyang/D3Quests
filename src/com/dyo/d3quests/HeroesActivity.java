@@ -103,7 +103,7 @@ public class HeroesActivity extends Activity {
 		return true;
 	}
 
-    private class getD3DataTask extends AsyncTask<String, Void, String> {
+    public class getD3DataTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
               
