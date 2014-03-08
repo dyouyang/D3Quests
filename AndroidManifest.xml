@@ -33,6 +33,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dyo.d3quests.HeroesActivity" />
         </activity>
+        <activity
+            android:name="com.dyo.d3quests.QuestsActivitySwipe"
+            android:label="@string/title_activity_quests_activity_swipe"
+            android:parentActivityName="com.dyo.d3quests.HeroesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dyo.d3quests.HeroesActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -88,7 +88,7 @@ public class HeroesActivity extends Activity {
 					long id) {
 				String item = ((TextView)view).getText().toString();
 				
-				Intent i = new Intent(view.getContext(), QuestsActivity.class);
+				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)adapter.getItem(position);
 				i.putExtra("heroId", hero.id);
 				startActivity(i);
