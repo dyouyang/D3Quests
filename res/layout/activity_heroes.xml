@@ -26,24 +26,12 @@
         android:layout_centerHorizontal="true"
         android:text="Button" />
 
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/findQuests" >
-
-    <TextView
+    <ListView
         android:id="@+id/missingQuests"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/findQuests"
-        android:text="TextView" />
-    </ScrollView>
+        android:layout_below="@+id/findQuests" >
+    </ListView>
 
 </RelativeLayout>

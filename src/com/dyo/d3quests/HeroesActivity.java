@@ -26,20 +26,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class HeroesActivity extends Activity {
 
 	private EditText battleTagInput;
 	private Button findQuests;
-	private TextView missingQuests;
+	private ListView heroesView;
 	
 	private String battleTag;
 	HashMap<String, Integer> heroesMap = new HashMap<String, Integer>();
-	List<Hero> heroesList = new ArrayList<Hero>();
-
+	ArrayList<Hero> heroesList = new ArrayList<Hero>();
+	ArrayAdapter<Hero> adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,16 +68,30 @@ public class HeroesActivity extends Activity {
 		        if (networkInfo != null && networkInfo.isConnected()) {
 		            new getD3DataTask().execute(stringUrl);
 		        } else {
-		            missingQuests.setText("No network connection available.");
+		            //missingQuests.setText("No network connection available.");
 		        }
 		        
 				battleTag = battleTagInput.getText().toString();
-				missingQuests.setText(battleTag);				
+				//missingQuests.setText(battleTag);				
 			}
 		});
 		
-		missingQuests = (TextView) findViewById(R.id.missingQuests);
-		missingQuests.setText("missing quests");
+		heroesView = (ListView) findViewById(R.id.missingQuests);
+    	adapter = new ArrayAdapter<Hero>(this, 
+    	        android.R.layout.simple_list_item_1, heroesList);	
+    	heroesView.setAdapter(adapter);	
+    	
+    	heroesView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				String item = ((TextView)view).getText().toString();
+				
+				Intent i = new Intent(view.getContext(), QuestsActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 
 	@Override
@@ -95,11 +115,16 @@ public class HeroesActivity extends Activity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+        	adapter.clear();
         	parseHeroes(result);
-            missingQuests.setText(heroesList.toString());
+        	adapter.notifyDataSetChanged();
+        	// TODO: Handle updates better (without notifying).
+            //missingQuests.setText(heroesList.toString());
+
        }
+
     }
-    
+	
     private void parseHeroes(String json) {
     	try {
 			JSONObject profile = new JSONObject(json);
