@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +39,10 @@ public class QuestsActivity extends Activity {
 	private ArrayAdapter<Quest> adapter;
 	
 	private ArrayList<Quest> act1List;
-	
+	private ArrayList<Quest> act2List;
+	private ArrayList<Quest> act3List;
+	private ArrayList<Quest> act4List;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +54,12 @@ public class QuestsActivity extends Activity {
 		heroName = (TextView)findViewById(R.id.hero_name);
 		heroName.setText("" + heroId);
 		act1List = new ArrayList<Quest>();
+		act2List = new ArrayList<Quest>();
+		act3List = new ArrayList<Quest>();
+		act4List = new ArrayList<Quest>();
+		
+		initAllQuests();
+		
 		questListView = (ListView) findViewById(R.id.quest_list);
 		adapter = new ArrayAdapter<Quest>(this, 
     	        android.R.layout.simple_list_item_1, act1List);	
@@ -66,6 +76,19 @@ public class QuestsActivity extends Activity {
             //missingQuests.setText("No network connection available.");
         }
  
+	}
+
+	private void initAllQuests() {
+		act1List.add(new Quest("the-fallen-star", "The Fallen Star"));
+		act1List.add(new Quest("the-legacy-of-cain", "The Legacy of Cain"));
+		act1List.add(new Quest("a-shattered-crown", "A Shattered Crown"));
+		act1List.add(new Quest("reign-of-the-black-king", "Reign of the Black King"));
+		act1List.add(new Quest("sword-of-the-stranger", "Sword of the Stranger"));
+		act1List.add(new Quest("the-broken-blade", "The Broken Blade"));
+		act1List.add(new Quest("the-doom-in-wortham", "The Doom in Wortham"));
+		act1List.add(new Quest("trailing-the-coven", "Trailing the Coven"));
+		act1List.add(new Quest("the-imprisoned-angel", "The Imprisoned Angel"));
+		act1List.add(new Quest("return-to-new-tristram", "Return to New Tristram"));
 	}
 
 	/**
@@ -115,7 +138,6 @@ public class QuestsActivity extends Activity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-        	adapter.clear();
         	parseHero(result);
         	heroName.setText(name);
         	adapter.notifyDataSetChanged();
@@ -169,7 +191,10 @@ public class QuestsActivity extends Activity {
 				JSONObject quest = quests1.getJSONObject(i);
 				String slug = quest.getString("slug");
 				String name = quest.getString("name");
-				act1List.add(new Quest(slug, name));
+				Quest thisQuest = new Quest(slug, name);
+				if (act1List.contains(thisQuest)) {
+					act1List.get(act1List.indexOf(thisQuest)).setComplete(true);
+				}
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
