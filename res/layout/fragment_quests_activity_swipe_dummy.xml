@@ -19,9 +19,19 @@
         android:id="@+id/quest_list2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/quests_tip"
         android:layout_below="@+id/section_label"
         android:layout_centerHorizontal="true" >
 
     </ListView>
+
+    <TextView
+        android:id="@+id/quests_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="Tip: In order to enable the reset quests button in-game, complete all acts." />
 
 </RelativeLayout>
