@@ -96,6 +96,7 @@ public class HeroesActivity extends Activity {
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)adapter.getItem(position);
 				i.putExtra("heroId", hero.id);
+				i.putExtra("heroName", hero.name);
 				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
 				startActivity(i);
 			}
@@ -141,8 +142,10 @@ public class HeroesActivity extends Activity {
 			for(int i = 0; i < heroes.length(); i++) {
 				JSONObject hero = heroes.getJSONObject(i);
 				String heroName = hero.getString("name");
+				int level = hero.getInt("level");
+				String d3class = hero.getString("class");
 				int heroId = hero.getInt("id");
-				heroesList.add(new Hero(heroId, heroName));
+				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

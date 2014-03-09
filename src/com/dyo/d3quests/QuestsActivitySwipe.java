@@ -78,7 +78,10 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		setContentView(R.layout.activity_quests_activity_swipe);
 
 		heroId = getIntent().getExtras().getInt("heroId");
+		name = getIntent().getExtras().getString("heroName");
 		battleTagFull = getIntent().getExtras().getString("battleTagFull");
+		
+		setTitle(name);
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
