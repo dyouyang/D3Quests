@@ -281,6 +281,21 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				act1List.add(new Quest("the-scouring-of-caldeum", "The Scouring of Caldeum"));
 				act1List.add(new Quest("lord-of-lies", "Lord of Lies"));
 			}
+			if (act == 3) {
+				act1List.add(new Quest("the-siege-of-bastions-keep", "The Siege of Bastion's Keep"));
+				act1List.add(new Quest("turning-the-tide", "Turning the Tide"));
+				act1List.add(new Quest("the-breached-keep", "The Breached Keep"));
+				act1List.add(new Quest("tremors-in-the-stone", "Tremors in the Stone"));
+				act1List.add(new Quest("machines-of-war", "Machines of War"));
+				act1List.add(new Quest("siegebreaker", "Siegebreaker"));
+				act1List.add(new Quest("heart-of-sin", "Heart of Sin"));
+			}
+			if (act == 4) {
+				act1List.add(new Quest("fall-of-the-high-heavens", "Fall of the High Heavens"));
+				act1List.add(new Quest("the-light-of-hope", "The Light of Hope"));
+				act1List.add(new Quest("beneath-the-spire", "Beneath the Spire"));
+				act1List.add(new Quest("prime-evil", "Prime Evil"));
+			}
 		}
 		
 		
