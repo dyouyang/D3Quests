@@ -11,16 +11,17 @@
     <TextView
         android:id="@+id/section_label"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:text="Quest completion"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Loading quest completion..." />
 
     <ListView
         android:id="@+id/quest_list2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/section_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp" >
+        android:layout_centerHorizontal="true" >
+
     </ListView>
 
 </RelativeLayout>

@@ -16,6 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -111,7 +113,17 @@ public class HeroesActivity extends Activity {
 	}
 
     public class getD3DataTask extends AsyncTask<String, Void, String> {
+    	ProgressDialog mProgress;
+
         @Override
+		protected void onPreExecute() {
+        	super.onPreExecute();
+        	mProgress = new ProgressDialog(HeroesActivity.this);
+        	mProgress.setMessage("Getting heroes...");
+			mProgress.show();
+			
+		}
+		@Override
         protected String doInBackground(String... urls) {
               
             // params comes from the execute() call: params[0] is the url.
@@ -127,6 +139,7 @@ public class HeroesActivity extends Activity {
         	adapter.clear();
         	parseHeroes(result);
         	adapter.notifyDataSetChanged();
+        	mProgress.hide();
         	// TODO: Handle updates better (without notifying).
             //missingQuests.setText(heroesList.toString());
 

@@ -323,11 +323,10 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        	//heroName.setText(name);
 	        	adapter.notifyDataSetChanged();
 	        	if (fullActCompleted[act-1]) {
-	        		fullCompleted.setText("Act quests completed");
-	        		fullCompleted.setBackgroundColor(Color.GREEN);
+	        		fullCompleted.setText("Act completed");
 	        	} else {
 	        		fullCompleted.setText("Act not completed");
-	        		fullCompleted.setBackgroundColor(Color.RED);
+	        		fullCompleted.setTextColor(Color.RED);
 	        	}
 	        	// TODO: Handle updates better (without notifying).
 	            //missingQuests.setText(heroesList.toString());
