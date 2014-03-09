@@ -218,8 +218,9 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		private ArrayList<Quest> act1List = new ArrayList<Quest>();
-		ArrayAdapter<Quest> adapter;
+		QuestArrayAdapter adapter;
 		private int act;
+		ListView questListView;
 		
 		TextView fullCompleted;
 		public DummySectionFragment() {
@@ -238,9 +239,9 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			act = getArguments().getInt(
 					ARG_SECTION_NUMBER);
 			initAllQuests(act);
-			ListView questListView = (ListView) rootView.findViewById(R.id.quest_list2);
-		    adapter = new ArrayAdapter<Quest>(this.getActivity(), 
-	    	        android.R.layout.simple_list_item_1, act1List);	
+			questListView = (ListView) rootView.findViewById(R.id.quest_list2);
+		    adapter = new QuestArrayAdapter(this.getActivity(), 
+	    	        android.R.layout.simple_list_item_checked, act1List);	
 	    	questListView.setAdapter(adapter);
 	    	
 			// Gets the URL from the UI's text field.

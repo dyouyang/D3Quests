@@ -22,11 +22,7 @@ public class Quest {
 	}
 	@Override
 	public String toString() {
-		if(complete) {
-			return name + " completed";
-		} else {
-			return name + " not completed";
-		}
+		return name;
 	}
 	
 	public boolean isComplete() {
