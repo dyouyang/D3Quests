@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
@@ -112,7 +113,21 @@ public class HeroesActivity extends Activity {
 		return true;
 	}
 
-    public class getD3DataTask extends AsyncTask<String, Void, String> {
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_feedback:
+	        Intent Email = new Intent(Intent.ACTION_SEND);
+	        Email.setType("text/email");
+	        Email.putExtra(Intent.EXTRA_EMAIL, new String[] { "douyang@gmail.com" });
+	        Email.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+	        startActivity(Intent.createChooser(Email, "Send Feedback:"));
+	        return true;
+	    }
+		return false;
+	}
+
+	public class getD3DataTask extends AsyncTask<String, Void, String> {
     	ProgressDialog mProgress;
 
         @Override

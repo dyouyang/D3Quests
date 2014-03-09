@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -140,6 +141,13 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case R.id.action_feedback:
+	        Intent Email = new Intent(Intent.ACTION_SEND);
+	        Email.setType("text/email");
+	        Email.putExtra(Intent.EXTRA_EMAIL, new String[] { "douyang@gmail.com" });
+	        Email.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+	        startActivity(Intent.createChooser(Email, "Send Feedback:"));
+	        return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
