@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HeroesActivity extends Activity {
 
@@ -76,7 +77,7 @@ public class HeroesActivity extends Activity {
 		        if (networkInfo != null && networkInfo.isConnected()) {
 		            new getD3DataTask().execute(stringUrl);
 		        } else {
-		            //missingQuests.setText("No network connection available.");
+		            Toast.makeText(getApplicationContext(), "No network connection.", Toast.LENGTH_LONG).show();
 		        }
 		        
 				battleTag = battleTagInput.getText().toString();

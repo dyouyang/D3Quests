@@ -39,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class QuestsActivitySwipe extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -261,7 +262,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        if (networkInfo != null && networkInfo.isConnected()) {
 	            new getD3DataTask().execute(stringUrl);
 	        } else {
-	            //missingQuests.setText("No network connection available.");
+	        	Toast.makeText(getActivity(), "No network connection.", Toast.LENGTH_LONG).show();
 	        }
 			return rootView;
 		}
