@@ -72,6 +72,7 @@ public class HeroesActivity extends Activity {
 				
 				if (battleTag.length() < 1 || battleTagNum.length() < 1) {
 					Toast.makeText(getApplicationContext(), "Enter Battle.net ID and 4 digit code", Toast.LENGTH_LONG).show();
+					adapter.clear();
 					return;
 				}
 				

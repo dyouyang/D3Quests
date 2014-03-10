@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/textView1"
         android:ems="10" 
-        android:text="zzilong"/>
+        android:hint="battleTag"/>
 
     <Button
         android:id="@+id/findQuests"
@@ -53,7 +53,7 @@
         android:layout_toRightOf="@+id/textView1"
         android:ems="10"
         android:inputType="number"
-        android:text="1758" >
+        android:hint="1111" >
 
     </EditText>
 
