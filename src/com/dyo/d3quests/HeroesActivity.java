@@ -1,5 +1,6 @@
 package com.dyo.d3quests;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -217,10 +218,13 @@ public class HeroesActivity extends Activity {
     
  // Reads an InputStream and converts it to a String.
     public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");        
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+        BufferedReader reader = null;
+        reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")); 
+        StringBuilder finalString = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+        	finalString.append(line);
+        }
+        return finalString.toString();
     }
 }
