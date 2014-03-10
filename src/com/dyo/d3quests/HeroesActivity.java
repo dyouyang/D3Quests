@@ -69,6 +69,12 @@ public class HeroesActivity extends Activity {
 			public void onClick(View v) {
 				battleTag = battleTagInput.getText().toString();
 				battleTagNum = battleTagNumInput.getText().toString();
+				
+				if (battleTag.length() < 1 || battleTagNum.length() < 1) {
+					Toast.makeText(getApplicationContext(), "Enter Battle.net ID and 4 digit code", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
 				// Gets the URL from the UI's text field.
 		        String stringUrl = String.format("http://us.battle.net/api/d3/profile/%s-%s/",
 		        		battleTag, battleTagNum);
@@ -165,8 +171,10 @@ public class HeroesActivity extends Activity {
     }
 	
     private void parseHeroes(String json) {
+    	JSONObject profile;
     	try {
-			JSONObject profile = new JSONObject(json);
+			profile = new JSONObject(json);
+
 			JSONArray heroes = profile.getJSONArray("heroes");
 			
 			for(int i = 0; i < heroes.length(); i++) {
@@ -178,7 +186,15 @@ public class HeroesActivity extends Activity {
 				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			try {
+				profile = new JSONObject(json);
+				String error = profile.getString("reason");
+				Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+			} catch (JSONException e1) {
+				Toast.makeText(getApplicationContext(), "Unknow Diablo 3 API error", Toast.LENGTH_LONG).show();
+				e1.printStackTrace();
+			}
+			
 			e.printStackTrace();
 		}
     	
