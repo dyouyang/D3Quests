@@ -235,6 +235,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		ListView questListView;
 		
 		TextView fullCompleted;
+		String fractionComplete;
 		public DummySectionFragment() {
 		}
 
@@ -335,9 +336,9 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        	//heroName.setText(name);
 	        	adapter.notifyDataSetChanged();
 	        	if (fullActCompleted[act-1]) {
-	        		fullCompleted.setText("Act completed");
+	        		fullCompleted.setText(String.format("Act completed (%s)", fractionComplete));
 	        	} else {
-	        		fullCompleted.setText("Act not completed");
+	        		fullCompleted.setText(String.format("Act not complete (%s)", fractionComplete));
 	        		fullCompleted.setTextColor(Color.RED);
 	        	}
 	        	// TODO: Handle updates better (without notifying).
@@ -385,9 +386,9 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				//name = (String) hero.getString("name");
 				JSONObject normalQuests = hero.getJSONObject("progress").getJSONObject("normal");
 				JSONObject act1 = normalQuests.getJSONObject("act"+act);
-				boolean completed = act1.getBoolean("completed");
-				fullActCompleted[act-1] = completed;
+				
 				JSONArray quests1 = act1.getJSONArray("completedQuests");
+				
 				for (int i = 0; i < quests1.length(); i++) {
 					JSONObject quest = quests1.getJSONObject(i);
 					String slug = quest.getString("slug");
@@ -397,6 +398,14 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 						act1List.get(act1List.indexOf(thisQuest)).setComplete(true);
 					}
 				}
+				
+				if (quests1.length() == act1List.size()) {
+					fullActCompleted[act-1] = true;
+				} else {
+					fullActCompleted[act-1] = false;
+				}
+				
+				fractionComplete = quests1.length() + "/" + act1List.size();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
