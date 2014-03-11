@@ -77,19 +77,18 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				battleTag = battleTagInput.getText().toString();
 				battleTagNum = battleTagNumInput.getText().toString();
 				
-				// truncates trailing spaces
-				
-				for (int i = 1; i < battleTag.length(); i++ ) {
-					if ( battleTag.substring(i-1,i).equals(" ")) {
-						battleTag = battleTag.substring(0,i-1);
-						break;
-					}
-				}
-				
 				if (battleTag.length() < 1 || battleTagNum.length() < 1) {
 					Toast.makeText(getApplicationContext(), "Enter Battle.net ID and 4 digit code", Toast.LENGTH_LONG).show();
 					adapter.clear();
-					return;
+					return; 
+				} else {
+					for (int i = 1; i < battleTag.length(); i++) {
+						if (battleTag.substring(i-1,i).equals(" ")) {
+							Toast.makeText(getApplicationContext(), "Please remove spaces in Battle.net ID", Toast.LENGTH_LONG).show();
+							adapter.clear();
+							return;
+						}
+					}
 				}
 				
 				// Gets the URL from the UI's text field.
