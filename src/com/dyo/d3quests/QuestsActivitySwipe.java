@@ -62,6 +62,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 
 	private static int heroId;
 	private String name;
+	private static String region;
 	private TextView heroName;
 	private ListView questListView;
 	private ArrayAdapter<Quest> adapter;
@@ -83,6 +84,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		heroId = getIntent().getExtras().getInt("heroId");
 		name = getIntent().getExtras().getString("heroName");
 		battleTagFull = getIntent().getExtras().getString("battleTagFull");
+		region = getIntent().getExtras().getString("region");
 		
 		setTitle(name);
 		// Set up the action bar.
@@ -255,8 +257,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	    	questListView.setAdapter(adapter);
 	    	
 			// Gets the URL from the UI's text field.
-	        String stringUrl = String.format("http://us.battle.net/api/d3/profile/%s/hero/%d",
-	        		battleTagFull, heroId);
+	        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s/hero/%d",
+	        		region, battleTagFull, heroId);
 	        ConnectivityManager connMgr = (ConnectivityManager) 
 	            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

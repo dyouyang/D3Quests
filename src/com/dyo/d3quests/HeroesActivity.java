@@ -131,6 +131,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				i.putExtra("heroId", hero.id);
 				i.putExtra("heroName", hero.name);
 				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
+				i.putExtra("region", region);
 				startActivity(i);
 			}
 		});
@@ -211,7 +212,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			try {
 				profile = new JSONObject(json);
 				String error = profile.getString("reason");
-				Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), error + "Double check your region and ID.", Toast.LENGTH_LONG).show();
 			} catch (JSONException e1) {
 				Toast.makeText(getApplicationContext(), "Unknown Diablo 3 API error", Toast.LENGTH_LONG).show();
 				e1.printStackTrace();
