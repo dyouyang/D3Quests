@@ -23,6 +23,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -57,15 +58,18 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	ArrayList<Hero> heroesList = new ArrayList<Hero>();
 	ArrayAdapter<Hero> adapter;
 	
+	ActionBar actionBar;
 	SpinnerAdapter mSpinnerAdapter;
 	private String region = "us";
+	
+	SharedPreferences settings;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
 		setTitle("D3 Helper");
-		ActionBar actionBar = getActionBar();
+		actionBar = getActionBar();
 		mSpinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.action_list,
 		          android.R.layout.simple_spinner_dropdown_item);
 		
@@ -74,8 +78,15 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 		//actionBar.setDisplayShowTitleEnabled(false);
 		
+		settings = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+		
 		battleTagInput = (EditText) findViewById(R.id.battletag);
 		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
+		
+		// Fill in id from last button click.
+		battleTagInput.setText(settings.getString("battleTag", "")); 
+		battleTagNumInput.setText(settings.getString("battleTagNum", ""));
+		actionBar.setSelectedNavigationItem(settings.getInt("region", 0));
 		
 		findQuests = (Button) findViewById(R.id.findQuests);
 		findQuests.setOnClickListener(new OnClickListener() {
@@ -97,6 +108,14 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 					adapter.clear();
 					return;
 				}
+				
+				// Save id.
+				// TODO: Save region.
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString("battleTag", battleTag);
+				editor.putString("battleTagNum", battleTagNum);
+				editor.putInt("region", actionBar.getSelectedNavigationIndex());
+				editor.commit();
 				
 				// Gets the URL from the UI's text field.
 		        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s-%s/",
