@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar.OnNavigationListener;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -38,10 +40,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HeroesActivity extends Activity {
+public class HeroesActivity extends Activity implements OnNavigationListener{
 
 	private EditText battleTagInput;
 	private EditText battleTagNumInput;
@@ -54,11 +57,22 @@ public class HeroesActivity extends Activity {
 	ArrayList<Hero> heroesList = new ArrayList<Hero>();
 	ArrayAdapter<Hero> adapter;
 	
+	SpinnerAdapter mSpinnerAdapter;
+	private String region = "us";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
+		setTitle("D3 Helper");
+		ActionBar actionBar = getActionBar();
+		mSpinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.action_list,
+		          android.R.layout.simple_spinner_dropdown_item);
 		
+		actionBar.setNavigationMode(getActionBar().NAVIGATION_MODE_LIST);
+		
+		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
+		//actionBar.setDisplayShowTitleEnabled(false);
 		
 		battleTagInput = (EditText) findViewById(R.id.battletag);
 		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
@@ -84,8 +98,8 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				}
 				
 				// Gets the URL from the UI's text field.
-		        String stringUrl = String.format("http://us.battle.net/api/d3/profile/%s-%s/",
-		        		battleTag, battleTagNum);
+		        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s-%s/",
+		        		region, battleTag, battleTagNum);
 		        ConnectivityManager connMgr = (ConnectivityManager) 
 		            getSystemService(Context.CONNECTIVITY_SERVICE);
 		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -199,7 +213,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				String error = profile.getString("reason");
 				Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
 			} catch (JSONException e1) {
-				Toast.makeText(getApplicationContext(), "Unknow Diablo 3 API error", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Unknown Diablo 3 API error", Toast.LENGTH_LONG).show();
 				e1.printStackTrace();
 			}
 			
@@ -251,4 +265,23 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
         }
         return finalString.toString();
     }
+
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		switch(itemPosition) {
+		case 0:
+			region = "us";
+			break;
+		case 1:
+			region = "eu";
+			break;
+		case 2:
+			region = "kr";
+			break;
+		case 3:
+			region = "tw";
+			break;
+		}
+		return true;
+	}
 }
