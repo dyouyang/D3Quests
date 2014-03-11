@@ -89,6 +89,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                            InputMethodManager.HIDE_NOT_ALWAYS);
 
 				battleTag = battleTagInput.getText().toString();
+				battleTag = battleTag.replaceAll("\\s","");
 				battleTagNum = battleTagNumInput.getText().toString();
 				
 				if (battleTag.length() < 1 || battleTagNum.length() < 1) {
