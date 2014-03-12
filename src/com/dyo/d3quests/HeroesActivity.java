@@ -101,6 +101,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 
 				battleTag = battleTagInput.getText().toString();
 				battleTag = battleTag.replaceAll("\\s","");
+				battleTagInput.setText(battleTag);
 				battleTagNum = battleTagNumInput.getText().toString();
 				
 				if (battleTag.length() < 1 || battleTagNum.length() < 1) {
@@ -129,7 +130,6 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 		            Toast.makeText(getApplicationContext(), "No network connection.", Toast.LENGTH_LONG).show();
 		        }
 		        
-				battleTag = battleTagInput.getText().toString();
 				//missingQuests.setText(battleTag);				
 			}
 		});
