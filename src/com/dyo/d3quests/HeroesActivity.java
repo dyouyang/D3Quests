@@ -313,7 +313,10 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     }
     
     private void addAccountToRecents(String account) {
-    	recentAccounts.add(account);
+    	if(!recentAccounts.contains(account)) {
+    		recentAccounts.add(account);
+    	}
+    	drawerAdapter.notifyDataSetChanged();
 	}
 
 	private String downloadUrl(String myurl) throws IOException {
