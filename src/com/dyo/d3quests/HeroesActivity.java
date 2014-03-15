@@ -24,10 +24,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,12 +66,19 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	private String region = "us";
 	
 	SharedPreferences settings;
+	ArrayList<String> recentAccounts;
+	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private ListView mDrawerList;
+	private ArrayAdapter<String> drawerAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
 		setTitle("D3 Helper");
+		
+		recentAccounts = new ArrayList<String>();
 		actionBar = getActionBar();
 		mSpinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.action_list,
 		          android.R.layout.simple_spinner_dropdown_item);
@@ -78,6 +88,44 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 		//actionBar.setDisplayShowTitleEnabled(false);
 		
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 
+        		R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        	
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        
+        // Set the adapter for the list view
+        recentAccounts.add("test1");
+        recentAccounts.add("test2");
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+ 
+        // Set the adapter for the list view
+        drawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recentAccounts);
+        mDrawerList.setAdapter(drawerAdapter);
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        
+        
 		settings = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 		
 		battleTagInput = (EditText) findViewById(R.id.battletag);
@@ -166,6 +214,12 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	// Handle the drawer app icon.
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        
 		switch (item.getItemId()) {
 		case R.id.action_feedback:
 	        Intent Email = new Intent(Intent.ACTION_SEND);
@@ -177,7 +231,20 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 	    }
 		return false;
 	}
+  
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+ 
 	public class getD3DataTask extends AsyncTask<String, Void, String> {
     	ProgressDialog mProgress;
 
@@ -228,6 +295,8 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				int heroId = hero.getInt("id");
 				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
+			
+			addAccountToRecents(battleTag + "-" + battleTagNum);
 		} catch (JSONException e) {
 			try {
 				profile = new JSONObject(json);
@@ -243,7 +312,11 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	
     }
     
-    private String downloadUrl(String myurl) throws IOException {
+    private void addAccountToRecents(String account) {
+    	recentAccounts.add(account);
+	}
+
+	private String downloadUrl(String myurl) throws IOException {
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
         // web page content.
@@ -304,5 +377,30 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			break;
 		}
 		return true;
+	}
+	
+	/**
+	 * @author yinglong
+	 *
+	 */
+	private class DrawerItemClickListener implements OnItemClickListener {
+
+		/* (non-Javadoc)
+		 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
+		@Override
+		public void onItemClick(AdapterView<?> parent, View v, int position,
+				long arg3) {
+			String recentAccount = mDrawerList.getItemAtPosition(position).toString();
+			//((TextView)v).getText().toString(); 
+			//drawerAdapter.getItem(position);
+			
+		    // Highlight the selected item, update the title, and close the drawer
+		    mDrawerList.setItemChecked(position, true);
+		    mDrawerLayout.closeDrawer(mDrawerList);
+		    
+			Toast.makeText(getApplicationContext(), recentAccount, Toast.LENGTH_LONG).show();
+		}
+
 	}
 }
