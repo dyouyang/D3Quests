@@ -121,7 +121,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
  
         // Set the adapter for the list view
-        drawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recentAccounts);
+        drawerAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, recentAccounts);
         mDrawerList.setAdapter(drawerAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -160,7 +160,6 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				}
 				
 				// Save id.
-				// TODO: Save region.
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString("battleTag", battleTag);
 				editor.putString("battleTagNum", battleTagNum);
@@ -404,7 +403,16 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 		    mDrawerList.setItemChecked(position, true);
 		    mDrawerLayout.closeDrawer(mDrawerList);
 		    
-			Toast.makeText(getApplicationContext(), recentAccount, Toast.LENGTH_LONG).show();
+		    String [] accountSplit = recentAccount.split("#");
+		    
+		    if (accountSplit.length == 2) {
+		    	battleTagInput.setText(accountSplit[0]);
+		    	battleTagNumInput.setText(accountSplit[1]);
+		    	findQuests.performClick();
+		    } else {
+		    	Log.e("HeroesActivity", "Battle Tag in drawer error: " + recentAccount);
+		    	Toast.makeText(getApplicationContext(), "BattleTag error occured.", Toast.LENGTH_SHORT).show();
+		    }
 		}
 
 	}
