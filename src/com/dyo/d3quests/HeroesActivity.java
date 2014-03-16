@@ -29,6 +29,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Telephony.Sms.Conversations;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -313,8 +314,9 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     }
     
     private void addAccountToRecents(String account) {
-    	if(!recentAccounts.contains(account)) {
-    		recentAccounts.add(account);
+    	String mAccount = BattleTagConverter.convertAPIToHuman(account);
+    	if(!recentAccounts.contains(mAccount)) {
+    		recentAccounts.add(mAccount);
     	}
     	drawerAdapter.notifyDataSetChanged();
 	}
