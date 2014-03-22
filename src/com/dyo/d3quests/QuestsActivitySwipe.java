@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -236,6 +237,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		
 		TextView fullCompleted;
 		String fractionComplete;
+		TextView tip;
 		public DummySectionFragment() {
 		}
 
@@ -255,6 +257,13 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		    adapter = new QuestArrayAdapter(this.getActivity(), 
 	    	        android.R.layout.simple_list_item_checked, act1List);	
 	    	questListView.setAdapter(adapter);
+	    	
+	    	tip = (TextView) rootView.findViewById(R.id.quests_tip);
+	    	Random r = new Random();
+	    	int randomTip = r.nextInt(2);
+	    	if (randomTip == 1) {
+	    		tip.setText("Note: The diablo 3 database has a small delay, so completion may not always be up to date.");
+	    	}
 	    	
 			// Gets the URL from the UI's text field.
 	        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s/hero/%d",
