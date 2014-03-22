@@ -12,7 +12,7 @@
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingEnd="?android:attr/listPreferredItemPaddingLeft"
         android:paddingStart="?android:attr/listPreferredItemPaddingRight"
-        android:text="Recent Heroes"
+        android:text="Saved Heroes"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@android:color/holo_red_dark" />
 
