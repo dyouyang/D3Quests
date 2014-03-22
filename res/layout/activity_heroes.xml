@@ -20,14 +20,16 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     android:focusableInTouchMode="true"
     tools:context=".HeroesActivity" >
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/battletag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/textView1"
         android:ems="10" 
-        android:hint="battleTag"/>
+        android:hint="BattleTag"
+        android:completionThreshold="1"
+        android:dropDownWidth="wrap_content"/>
 
     <Button
         android:id="@+id/findQuests"
