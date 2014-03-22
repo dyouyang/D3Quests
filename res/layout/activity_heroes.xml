@@ -29,6 +29,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:ems="10" 
         android:hint="BattleTag"
         android:completionThreshold="1"
+        android:inputType="textNoSuggestions"
+        android:maxLines="1"
         android:dropDownWidth="wrap_content"/>
 
     <Button
@@ -66,6 +68,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_toRightOf="@+id/textView1"
         android:ems="10"
         android:inputType="number"
+        android:maxLines="1"
         android:hint="1111" >
 
     </EditText>
