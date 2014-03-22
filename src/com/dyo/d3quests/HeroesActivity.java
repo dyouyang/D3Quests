@@ -316,8 +316,13 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     
     private void addSavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
     	SavedHero newHero = new SavedHero(id, name, level, d3class, battletagFull, region);
-    	SavedHero hero = datasource.createSavedHero(newHero);
-    	drawerAdapter.add(hero);
+    	List<SavedHero> queryResult = datasource.findHero(newHero);
+    	if (queryResult.size() < 1) {
+    		SavedHero hero = datasource.createSavedHero(newHero);
+    		drawerAdapter.add(hero);
+    	} else {
+    		Toast.makeText(getApplicationContext(), "Hero already saved", Toast.LENGTH_SHORT).show();
+    	}
 //    	if(!recentAccounts.contains(mAccount)) {
 //    		recentAccounts.add(mAccount);
 //    	}
