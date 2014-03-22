@@ -97,8 +97,7 @@ public class SavedHero {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return heroName;
+		return String.format("%s (%d %s)", heroName, heroLevel, heroClass.replace("-", " "));
 	}
 
 	

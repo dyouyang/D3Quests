@@ -24,7 +24,6 @@ public class Hero {
 	}
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return String.format("%s (%d %s)", name, level, d3class.replace("-", " "));
 	}
 	
