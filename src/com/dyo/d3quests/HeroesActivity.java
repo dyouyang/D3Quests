@@ -423,7 +423,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 			
 		    // Highlight the selected item, update the title, and close the drawer
-		    mDrawerList.setItemChecked(position, true);
+		    //mDrawerList.setItemChecked(position, true);
 		    mDrawerLayout.closeDrawer(mDrawerList);
 		    
 			Intent i = new Intent(v.getContext(), QuestsActivitySwipe.class);
@@ -451,8 +451,8 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 			
 		    // Highlight the selected item, update the title, and close the drawer
-		    mDrawerList.setItemChecked(position, true);
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    //mDrawerList.setItemChecked(position, true);
+		    //mDrawerLayout.closeDrawer(mDrawerList);
 		    
 		    datasource.deleteSavedHero(hero);
 		    drawerAdapter.remove(hero);
