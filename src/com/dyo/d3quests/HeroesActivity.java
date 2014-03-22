@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.zip.Inflater;
 
 import org.json.JSONArray;
@@ -63,7 +64,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	private String region = "us";
 	
 	SharedPreferences settings;
-	ArrayList<String> recentAccounts;
+	LinkedHashMap<String, String> recentAccounts;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ListView mDrawerList;
@@ -75,7 +76,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		setContentView(R.layout.activity_heroes);
 		setTitle("D3 Helper");
 		
-		recentAccounts = new ArrayList<String>();
+		recentAccounts = new LinkedHashMap<String, String>(5, (float) 0.75, true);
 		actionBar = getActionBar();
 		mSpinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.action_list,
 		          android.R.layout.simple_spinner_dropdown_item);
@@ -114,7 +115,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
         mDrawerList.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
  
         // Set the adapter for the list view
-        drawerAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, recentAccounts);
+        drawerAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, recentAccounts.keySet());
         mDrawerList.setAdapter(drawerAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
