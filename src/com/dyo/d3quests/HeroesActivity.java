@@ -4,39 +4,42 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ActionBar.OnNavigationListener;
 import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +49,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class HeroesActivity extends Activity implements OnNavigationListener{
+
+
 
 	private EditText battleTagInput;
 	private EditText battleTagNumInput;
@@ -63,12 +68,21 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	private String region = "us";
 	
 	SharedPreferences settings;
+	LinkedHashMap<String, String> recentAccounts;
+	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private ListView mDrawerList;
+	private ArrayAdapter<SavedHero> drawerAdapter;
+	
+	private HeroesDataSource datasource;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
 		setTitle("D3 Helper");
+		
+		recentAccounts = new LinkedHashMap<String, String>(5, (float) 0.75, true);
 		actionBar = getActionBar();
 		mSpinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.action_list,
 		          android.R.layout.simple_spinner_dropdown_item);
@@ -78,6 +92,47 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 		//actionBar.setDisplayShowTitleEnabled(false);
 		
+		datasource = new HeroesDataSource(this);
+		datasource.open();
+		
+		List<SavedHero> savedHeroes = datasource.getAllHeroes();
+		
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 
+        		R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        	
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
+ 
+        // Set the adapter for the list view
+        drawerAdapter = new ArrayAdapter<SavedHero>(this, R.layout.drawer_list_item, savedHeroes);
+        mDrawerList.setAdapter(drawerAdapter);
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemLongClickListener(new DrawerItemLongClickListener());
+        
+        
 		settings = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 		
 		battleTagInput = (EditText) findViewById(R.id.battletag);
@@ -111,7 +166,6 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				}
 				
 				// Save id.
-				// TODO: Save region.
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString("battleTag", battleTag);
 				editor.putString("battleTagNum", battleTagNum);
@@ -155,6 +209,17 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				startActivity(i);
 			}
 		});
+    	
+    	heroesView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View v,
+					int position, long id) {
+				Hero hero = (Hero)adapter.getItem(position);
+				addSavedHero(hero.id, hero.name, hero.level, hero.d3class, battleTag + "-" + battleTagNum, region);
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -166,6 +231,12 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	// Handle the drawer app icon.
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        
 		switch (item.getItemId()) {
 		case R.id.action_feedback:
 	        Intent Email = new Intent(Intent.ACTION_SEND);
@@ -177,7 +248,20 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 	    }
 		return false;
 	}
+  
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+ 
 	public class getD3DataTask extends AsyncTask<String, Void, String> {
     	ProgressDialog mProgress;
 
@@ -228,6 +312,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				int heroId = hero.getInt("id");
 				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
+			
 		} catch (JSONException e) {
 			try {
 				profile = new JSONObject(json);
@@ -243,7 +328,23 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	
     }
     
-    private String downloadUrl(String myurl) throws IOException {
+    private void addSavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
+    	SavedHero newHero = new SavedHero(id, name, level, d3class, battletagFull, region);
+    	List<SavedHero> queryResult = datasource.findHero(newHero);
+    	if (queryResult.size() < 1) {
+    		SavedHero hero = datasource.createSavedHero(newHero);
+    		drawerAdapter.add(hero);
+    		Toast.makeText(getApplicationContext(), hero.getHeroName() + " added to saved heroes.", Toast.LENGTH_SHORT).show();
+    	} else {
+    		Toast.makeText(getApplicationContext(), newHero + " already in saved heroes.", Toast.LENGTH_SHORT).show();
+    	}
+//    	if(!recentAccounts.contains(mAccount)) {
+//    		recentAccounts.add(mAccount);
+//    	}
+    	drawerAdapter.notifyDataSetChanged();
+	}
+
+	private String downloadUrl(String myurl) throws IOException {
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
         // web page content.
@@ -305,4 +406,61 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 		}
 		return true;
 	}
+	
+	/**
+	 * @author yinglong
+	 *
+	 */
+	private class DrawerItemClickListener implements OnItemClickListener {
+
+		/* (non-Javadoc)
+		 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
+		@Override
+		public void onItemClick(AdapterView<?> parent, View v, int position,
+				long arg3) {
+			
+			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
+			
+		    // Highlight the selected item, update the title, and close the drawer
+		    //mDrawerList.setItemChecked(position, true);
+		    //mDrawerLayout.closeDrawer(mDrawerList);
+		    
+			Intent i = new Intent(v.getContext(), QuestsActivitySwipe.class);
+			i.putExtra("heroId", Integer.valueOf(hero.getHeroId()));
+			i.putExtra("heroName", hero.getHeroName());
+			i.putExtra("battleTagFull", hero.getBattleTagFull());
+			i.putExtra("region", hero.getRegion());
+			startActivity(i);		
+		}
+		
+	}
+	
+	/**
+	 * @author yinglong
+	 *
+	 */
+	public class DrawerItemLongClickListener implements OnItemLongClickListener {
+
+		/* (non-Javadoc)
+		 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View v,
+				int position, long arg3) {
+			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
+			
+		    // Highlight the selected item, update the title, and close the drawer
+		    //mDrawerList.setItemChecked(position, true);
+		    //mDrawerLayout.closeDrawer(mDrawerList);
+		    
+		    datasource.deleteSavedHero(hero);
+		    drawerAdapter.remove(hero);
+		    drawerAdapter.notifyDataSetChanged();
+		    Toast.makeText(getApplicationContext(), hero.getHeroName() + " removed from saved heroes.", Toast.LENGTH_SHORT).show();
+			return true;
+		}
+
+	}
+	
 }

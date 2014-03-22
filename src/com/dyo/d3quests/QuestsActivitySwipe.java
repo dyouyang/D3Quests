@@ -245,8 +245,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			View rootView = inflater.inflate(
 					R.layout.fragment_quests_activity_swipe_dummy, container,
 					false);
-			fullCompleted = (TextView) rootView
-					.findViewById(R.id.section_label);
+			fullCompleted = (TextView) rootView.findViewById(R.id.section_label);
 			//fullCompleted.setText(Integer.toString(getArguments().getInt(
 					//ARG_SECTION_NUMBER)));
 			act = getArguments().getInt(

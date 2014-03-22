@@ -10,6 +10,8 @@
     <string name="title_section2">Act 2</string>
     <string name="title_section3">Act 3</string>
     <string name="title_section4">Act 4</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
     <string-array name="action_list">
         <item>Region: US</item>
         <item>Region: EU</item>
