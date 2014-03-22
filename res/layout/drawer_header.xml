@@ -12,8 +12,13 @@
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingEnd="?android:attr/listPreferredItemPaddingLeft"
         android:paddingStart="?android:attr/listPreferredItemPaddingRight"
+        android:text="Recent Heroes"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@android:color/holo_red_dark" 
-        android:text="RECENT ACCOUNTS"/>
+        android:textColor="@android:color/holo_red_dark" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
 </LinearLayout>

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.zip.Inflater;
 
 import org.json.JSONArray;
@@ -68,7 +69,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ListView mDrawerList;
-	private ArrayAdapter<String> drawerAdapter;
+	private ArrayAdapter<SavedHero> drawerAdapter;
+	
+	private HeroesDataSource datasource;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,11 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 		//actionBar.setDisplayShowTitleEnabled(false);
+		
+		datasource = new HeroesDataSource(this);
+		datasource.open();
+		
+		List<SavedHero> savedHeroes = datasource.getAllHeroes();
 		
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -115,7 +123,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
         mDrawerList.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
  
         // Set the adapter for the list view
-        drawerAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, recentAccounts.keySet());
+        drawerAdapter = new ArrayAdapter<SavedHero>(this, R.layout.drawer_list_item, savedHeroes);
         mDrawerList.setAdapter(drawerAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -190,6 +198,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)adapter.getItem(position);
+				addSavedHero(hero.id, hero.name, hero.level, hero.d3class, battleTag + "-" + battleTagNum, region);
 				i.putExtra("heroId", hero.id);
 				i.putExtra("heroName", hero.name);
 				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
@@ -290,7 +299,6 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
 			
-			addAccountToRecents(battleTag + "-" + battleTagNum);
 		} catch (JSONException e) {
 			try {
 				profile = new JSONObject(json);
@@ -306,11 +314,13 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	
     }
     
-    private void addAccountToRecents(String account) {
-    	String mAccount = BattleTagConverter.convertAPIToHuman(account);
-    	if(!recentAccounts.contains(mAccount)) {
-    		recentAccounts.add(mAccount);
-    	}
+    private void addSavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
+    	SavedHero newHero = new SavedHero(id, name, level, d3class, battletagFull, region);
+    	SavedHero hero = datasource.createSavedHero(newHero);
+    	drawerAdapter.add(hero);
+//    	if(!recentAccounts.contains(mAccount)) {
+//    		recentAccounts.add(mAccount);
+//    	}
     	drawerAdapter.notifyDataSetChanged();
 	}
 
@@ -389,24 +399,19 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 		@Override
 		public void onItemClick(AdapterView<?> parent, View v, int position,
 				long arg3) {
-			String recentAccount = mDrawerList.getItemAtPosition(position).toString();
-			//((TextView)v).getText().toString(); 
-			//drawerAdapter.getItem(position);
+			
+			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 			
 		    // Highlight the selected item, update the title, and close the drawer
 		    mDrawerList.setItemChecked(position, true);
 		    mDrawerLayout.closeDrawer(mDrawerList);
 		    
-		    String [] accountSplit = recentAccount.split("#");
-		    
-		    if (accountSplit.length == 2) {
-		    	battleTagInput.setText(accountSplit[0]);
-		    	battleTagNumInput.setText(accountSplit[1]);
-		    	findQuests.performClick();
-		    } else {
-		    	Log.e("HeroesActivity", "Battle Tag in drawer error: " + recentAccount);
-		    	Toast.makeText(getApplicationContext(), "BattleTag error occured.", Toast.LENGTH_SHORT).show();
-		    }
+			Intent i = new Intent(v.getContext(), QuestsActivitySwipe.class);
+			i.putExtra("heroId", Integer.valueOf(hero.getHeroId()));
+			i.putExtra("heroName", hero.getHeroName());
+			i.putExtra("battleTagFull", hero.getBattleTagFull());
+			i.putExtra("region", hero.getRegion());
+			startActivity(i);		
 		}
 
 	}
