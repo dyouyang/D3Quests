@@ -97,7 +97,7 @@ public class SavedHero {
 
 	@Override
 	public String toString() {
-		return String.format("%s (%d %s)", heroName, heroLevel, heroClass.replace("-", " "));
+		return String.format("%s (%s)", heroName, heroClass.replace("-", " "));
 	}
 
 	

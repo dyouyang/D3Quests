@@ -424,7 +424,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			
 		    // Highlight the selected item, update the title, and close the drawer
 		    //mDrawerList.setItemChecked(position, true);
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    //mDrawerLayout.closeDrawer(mDrawerList);
 		    
 			Intent i = new Intent(v.getContext(), QuestsActivitySwipe.class);
 			i.putExtra("heroId", Integer.valueOf(hero.getHeroId()));
