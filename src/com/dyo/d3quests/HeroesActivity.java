@@ -9,8 +9,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.Inflater;
 
 import org.json.JSONArray;
@@ -41,6 +43,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -51,8 +54,7 @@ import android.widget.Toast;
 public class HeroesActivity extends Activity implements OnNavigationListener{
 
 
-
-	private EditText battleTagInput;
+	private AutoCompleteTextView battleTagInput;
 	private EditText battleTagNumInput;
 	private Button findQuests;
 	private ListView heroesView;
@@ -66,9 +68,13 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	ActionBar actionBar;
 	SpinnerAdapter mSpinnerAdapter;
 	private String region = "us";
+	private String [] regions = {"us", "eu", "kr", "tw"};
 	
 	SharedPreferences settings;
-	LinkedHashMap<String, String> recentAccounts;
+	Set<String> recentAccounts;
+	ArrayAdapter<String> adapterAutoComplete;
+	private ArrayList<String> recentAccountsList;
+	
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ListView mDrawerList;
@@ -76,13 +82,14 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	
 	private HeroesDataSource datasource;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
 		setTitle("D3 Helper");
 		
-		recentAccounts = new LinkedHashMap<String, String>(5, (float) 0.75, true);
+		//recentAccounts = new LinkedHashMap<String, String>(5, (float) 0.75, true);
 		actionBar = getActionBar();
 		mSpinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(), R.array.action_list,
 		          android.R.layout.simple_spinner_dropdown_item);
@@ -134,13 +141,43 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
         
         
 		settings = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-		
-		battleTagInput = (EditText) findViewById(R.id.battletag);
+
+		recentAccounts = settings.getStringSet("recentAccounts", new HashSet<String>());
+		recentAccountsList = new ArrayList<String>(recentAccounts);
+		adapterAutoComplete = new ArrayAdapter<String>(
+				this, android.R.layout.simple_dropdown_item_1line, recentAccountsList);
+			
+		battleTagInput = (AutoCompleteTextView) findViewById(R.id.battletag);
+
+		battleTagInput.setAdapter(adapterAutoComplete);
+
 		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
 		
+		// Onclick for autocomplete suggestion.
+		battleTagInput.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position,
+					long id) {
+					String item = ((TextView)v).getText().toString();
+					String [] battleTagSplit = item.split("#");
+					if (battleTagSplit.length == 2) {
+						battleTagInput.setText(battleTagSplit[0]);
+						battleTagNumInput.setText(battleTagSplit[1]);
+					} else {
+						Toast.makeText(getApplicationContext(), "Battle Tag error", Toast.LENGTH_SHORT).show();
+					}
+			}
+			
+		});
+
 		// Fill in id from last button click.
-		battleTagInput.setText(settings.getString("battleTag", "")); 
-		battleTagNumInput.setText(settings.getString("battleTagNum", ""));
+		// Note, fields must be set explicity first for auto-loading list on resume feature.
+		battleTag = settings.getString("battleTag", "");
+		battleTagInput.setText(battleTag); 
+		battleTagNum = settings.getString("battleTagNum", "");
+		battleTagNumInput.setText(battleTagNum);
+		region = regions[settings.getInt("region", 0)];
 		actionBar.setSelectedNavigationItem(settings.getInt("region", 0));
 		
 		findQuests = (Button) findViewById(R.id.findQuests);
@@ -153,7 +190,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 
 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                            InputMethodManager.HIDE_NOT_ALWAYS);
-
+				// Remove focus from the autocompletetextview to prevent
+				// flashing of the dropdown.
+				getCurrentFocus().clearFocus();
 				battleTag = battleTagInput.getText().toString();
 				battleTag = battleTag.replaceAll("\\s","");
 				battleTagInput.setText(battleTag);
@@ -220,8 +259,25 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				return true;
 			}
 		});
+
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+    	if (battleTagInput.getText().toString().length() > 0
+    			&& battleTagNumInput.getText().toString().length() > 0) {
+    		findQuests.post(new Runnable() {
+				@Override
+				public void run() {
+					findQuests.performClick();
+					
+				}
+			});
+    		
+    	}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -313,6 +369,8 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
 			
+			addToRecentAccounts(battleTag + "#" + battleTagNum);
+			
 		} catch (JSONException e) {
 			try {
 				profile = new JSONObject(json);
@@ -328,7 +386,23 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	
     }
     
-    private void addSavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
+    private void addToRecentAccounts(String account) {
+    	
+    	if (!recentAccountsList.contains(account)) {
+    		recentAccountsList.add(account);
+    		// AutocompleteTextView makes a copy of the data when the adapter is created, so
+    		// we must recreate the adapter each time.
+    		adapterAutoComplete = new ArrayAdapter<String>(
+    				this, android.R.layout.simple_dropdown_item_1line, recentAccountsList);
+    		battleTagInput.setAdapter(adapterAutoComplete);
+
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putStringSet("recentAccounts", new HashSet<String>(recentAccountsList));
+			editor.commit();
+    	}
+	}
+
+	private void addSavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
     	SavedHero newHero = new SavedHero(id, name, level, d3class, battletagFull, region);
     	List<SavedHero> queryResult = datasource.findHero(newHero);
     	if (queryResult.size() < 1) {
@@ -338,10 +412,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	} else {
     		Toast.makeText(getApplicationContext(), newHero + " already in saved heroes.", Toast.LENGTH_SHORT).show();
     	}
-//    	if(!recentAccounts.contains(mAccount)) {
-//    		recentAccounts.add(mAccount);
-//    	}
-    	drawerAdapter.notifyDataSetChanged();
+    	drawerAdapter.notifyDataSetChanged(); 
 	}
 
 	private String downloadUrl(String myurl) throws IOException {
