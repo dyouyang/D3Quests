@@ -60,11 +60,35 @@ public class HeroesDataSource {
 		return newHero;
 	}
 
+	public void deleteSavedHero(SavedHero hero) {
+		long id = hero.getId();
+		System.out.println("Hero deleted with id: " + id);
+		database.delete(HeroesOpenHelper.HEROES_TABLE_NAME, HeroesOpenHelper.COLUMN_ID
+				+ " = " + id, null);
+	}
+
 	public List<SavedHero> getAllHeroes() {
 		List<SavedHero> heroes = new ArrayList<SavedHero>();
 
 		Cursor cursor = database.query(HeroesOpenHelper.HEROES_TABLE_NAME,
 				allColumns, null, null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			SavedHero hero = cursorToSavedHero(cursor);
+			heroes.add(hero);
+			cursor.moveToNext();
+		}
+		// make sure to close the cursor
+		cursor.close();
+		return heroes;
+	}
+	
+	public List<SavedHero> findHero(SavedHero toFind) {
+		List<SavedHero> heroes = new ArrayList<SavedHero>();
+
+		Cursor cursor = database.query(HeroesOpenHelper.HEROES_TABLE_NAME,
+				allColumns, HeroesOpenHelper.BATTLETAG_FULL + "=? and " + HeroesOpenHelper.HERO_ID + "=?", new String[] {toFind.getBattleTagFull(), toFind.getHeroId()}, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
