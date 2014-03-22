@@ -54,7 +54,6 @@ import android.widget.Toast;
 public class HeroesActivity extends Activity implements OnNavigationListener{
 
 
-
 	private AutoCompleteTextView battleTagInput;
 	private EditText battleTagNumInput;
 	private Button findQuests;
@@ -69,6 +68,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	ActionBar actionBar;
 	SpinnerAdapter mSpinnerAdapter;
 	private String region = "us";
+	private String [] regions = {"us", "eu", "kr", "tw"};
 	
 	SharedPreferences settings;
 	Set<String> recentAccounts;
@@ -172,8 +172,12 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		});
 
 		// Fill in id from last button click.
-		battleTagInput.setText(settings.getString("battleTag", "")); 
-		battleTagNumInput.setText(settings.getString("battleTagNum", ""));
+		// Note, fields must be set explicity first for auto-loading list on resume feature.
+		battleTag = settings.getString("battleTag", "");
+		battleTagInput.setText(battleTag); 
+		battleTagNum = settings.getString("battleTagNum", "");
+		battleTagNumInput.setText(battleTagNum);
+		region = regions[settings.getInt("region", 0)];
 		actionBar.setSelectedNavigationItem(settings.getInt("region", 0));
 		
 		findQuests = (Button) findViewById(R.id.findQuests);
@@ -255,8 +259,25 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				return true;
 			}
 		});
+
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+    	if (battleTagInput.getText().toString().length() > 0
+    			&& battleTagNumInput.getText().toString().length() > 0) {
+    		findQuests.post(new Runnable() {
+				@Override
+				public void run() {
+					findQuests.performClick();
+					
+				}
+			});
+    		
+    	}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -391,7 +412,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	} else {
     		Toast.makeText(getApplicationContext(), newHero + " already in saved heroes.", Toast.LENGTH_SHORT).show();
     	}
-    	drawerAdapter.notifyDataSetChanged();
+    	drawerAdapter.notifyDataSetChanged(); 
 	}
 
 	private String downloadUrl(String myurl) throws IOException {
