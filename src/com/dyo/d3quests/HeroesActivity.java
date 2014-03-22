@@ -39,6 +39,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +49,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class HeroesActivity extends Activity implements OnNavigationListener{
+
+
 
 	private EditText battleTagInput;
 	private EditText battleTagNumInput;
@@ -127,6 +130,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
         mDrawerList.setAdapter(drawerAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemLongClickListener(new DrawerItemLongClickListener());
         
         
 		settings = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -198,12 +202,22 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 				
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)adapter.getItem(position);
-				addSavedHero(hero.id, hero.name, hero.level, hero.d3class, battleTag + "-" + battleTagNum, region);
 				i.putExtra("heroId", hero.id);
 				i.putExtra("heroName", hero.name);
 				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
 				i.putExtra("region", region);
 				startActivity(i);
+			}
+		});
+    	
+    	heroesView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View v,
+					int position, long id) {
+				Hero hero = (Hero)adapter.getItem(position);
+				addSavedHero(hero.id, hero.name, hero.level, hero.d3class, battleTag + "-" + battleTagNum, region);
+				return true;
 			}
 		});
 	}
@@ -320,8 +334,9 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
     	if (queryResult.size() < 1) {
     		SavedHero hero = datasource.createSavedHero(newHero);
     		drawerAdapter.add(hero);
+    		Toast.makeText(getApplicationContext(), hero.getHeroName() + " added to saved heroes.", Toast.LENGTH_SHORT).show();
     	} else {
-    		Toast.makeText(getApplicationContext(), "Hero already saved", Toast.LENGTH_SHORT).show();
+    		Toast.makeText(getApplicationContext(), newHero + " already in saved heroes.", Toast.LENGTH_SHORT).show();
     	}
 //    	if(!recentAccounts.contains(mAccount)) {
 //    		recentAccounts.add(mAccount);
@@ -418,6 +433,34 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			i.putExtra("region", hero.getRegion());
 			startActivity(i);		
 		}
+		
+	}
+	
+	/**
+	 * @author yinglong
+	 *
+	 */
+	public class DrawerItemLongClickListener implements OnItemLongClickListener {
+
+		/* (non-Javadoc)
+		 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View v,
+				int position, long arg3) {
+			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
+			
+		    // Highlight the selected item, update the title, and close the drawer
+		    mDrawerList.setItemChecked(position, true);
+		    mDrawerLayout.closeDrawer(mDrawerList);
+		    
+		    datasource.deleteSavedHero(hero);
+		    drawerAdapter.remove(hero);
+		    drawerAdapter.notifyDataSetChanged();
+		    Toast.makeText(getApplicationContext(), hero.getHeroName() + " removed from saved heroes.", Toast.LENGTH_SHORT).show();
+			return true;
+		}
 
 	}
+	
 }
