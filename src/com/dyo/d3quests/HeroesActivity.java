@@ -260,11 +260,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 			}
 		});
 
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
+    	// Auto load heroes on first app open
     	if (battleTagInput.getText().toString().length() > 0
     			&& battleTagNumInput.getText().toString().length() > 0) {
     		findQuests.post(new Runnable() {
