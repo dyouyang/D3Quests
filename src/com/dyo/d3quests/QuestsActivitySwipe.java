@@ -73,7 +73,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	private ArrayList<Quest> act3List;
 	private ArrayList<Quest> act4List;
 	
-	private static boolean fullActCompleted[] = new boolean[4];
+	private static boolean fullActCompleted[] = new boolean[5];
 
 	private static String battleTagFull;
 	
@@ -200,7 +200,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return 4;
+			return 5;
 		}
 
 		@Override
@@ -215,6 +215,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				return getString(R.string.title_section3).toUpperCase(l);
 			case 3:
 				return getString(R.string.title_section4).toUpperCase(l);
+			case 4:
+				return getString(R.string.title_section5).toUpperCase(l);
 			}
 			return null;
 		}
@@ -343,7 +345,13 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        	parseHero(result);
 	        	//heroName.setText(name);
 	        	adapter.notifyDataSetChanged();
-	        	if (fullActCompleted[act-1]) {
+	        	
+	        	if (act == 5) {
+	        		fullCompleted.setText("Happy RoS! Unfortunately, the Diablo 3 database API does not yet report act 5 quest completion." +
+	        				" Rest assured, the app will be updated ASAP when it does." +
+	        				" In the meantime, enjoy the glorious new act!");
+	        	}
+	        	else if (fullActCompleted[act-1]) {
 	        		fullCompleted.setText(String.format("Act completed (%s)", fractionComplete));
 	        	} else {
 	        		fullCompleted.setText(String.format("Act not complete (%s)", fractionComplete));
