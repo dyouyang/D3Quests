@@ -354,7 +354,14 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        	else if (fullActCompleted[act-1]) {
 	        		fullCompleted.setText(String.format("Act completed (%s)", fractionComplete));
 	        	} else {
-	        		fullCompleted.setText(String.format("Act not complete (%s)", fractionComplete));
+	        		if (fractionComplete != null) {
+	        			fullCompleted.setText(String.format("Act not complete (%s)", fractionComplete));
+	        		} else {
+	        			fullCompleted.setText("Sorry! Blizzard's Diablo 3 database and API are under maintenance in order to support" +
+	        					" RoS.  In the meantime, no quest data is available to retrieve.  The new updated data should" +
+	        					" be available in April 2014 (see official D3 Community forums for details)." +
+	        					" Thanks for your support, this app will be updated as soon as the new data is available!");
+	        		}
 	        		fullCompleted.setTextColor(Color.RED);
 	        	}
 	        	// TODO: Handle updates better (without notifying).
