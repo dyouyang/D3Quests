@@ -323,6 +323,16 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				act1List.add(new Quest("beneath-the-spire", "Beneath the Spire"));
 				act1List.add(new Quest("prime-evil", "Prime Evil"));
 			}
+			if (act == 5) {
+				act1List.add(new Quest("the-fall-of-westmarch", "The Fall of Westmarch"));
+				act1List.add(new Quest("souls-of-the-dead", "Souls of the Dead"));
+				act1List.add(new Quest("the-harbinger", "The Harbinger"));
+				act1List.add(new Quest("the-witch", "The Witch"));
+				act1List.add(new Quest("the-pandemonium-gate", "The Pandemonium Gate"));
+				act1List.add(new Quest("the-battlefields-of-eternity", "The Battlefields of Eternity"));
+				act1List.add(new Quest("breaching-the-fortress", "Breaching the Fortress"));
+				act1List.add(new Quest("angel-of-death", "Angel of Death"));
+			}
 		}
 		
 		
@@ -345,13 +355,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	        	parseHero(result);
 	        	//heroName.setText(name);
 	        	adapter.notifyDataSetChanged();
-	        	
-	        	if (act == 5) {
-	        		fullCompleted.setText("Happy RoS! Unfortunately, the Diablo 3 database API does not yet report act 5 quest completion." +
-	        				" Rest assured, the app will be updated ASAP when it does." +
-	        				" In the meantime, enjoy the glorious new act!");
-	        	}
-	        	else if (fullActCompleted[act-1]) {
+
+	        	if (fullActCompleted[act-1]) {
 	        		fullCompleted.setText(String.format("Act completed (%s)", fractionComplete));
 	        	} else {
 	        		if (fractionComplete != null) {
@@ -407,8 +412,8 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		 	try {
 				JSONObject hero = new JSONObject(result);
 				//name = (String) hero.getString("name");
-				JSONObject normalQuests = hero.getJSONObject("progress").getJSONObject("normal");
-				JSONObject act1 = normalQuests.getJSONObject("act"+act);
+				JSONObject progression = hero.getJSONObject("progression");
+				JSONObject act1 = progression.getJSONObject("act"+act);
 				
 				JSONArray quests1 = act1.getJSONArray("completedQuests");
 				
