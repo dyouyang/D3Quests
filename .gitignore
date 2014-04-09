@@ -27,3 +27,6 @@ proguard/
 *.ipr
 *.iws
 .idea/
+
+# Flurry api key
+*flurry_api_key_string.xml
