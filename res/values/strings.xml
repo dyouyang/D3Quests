@@ -11,12 +11,19 @@
     <string name="title_section3">Act 3</string>
     <string name="title_section4">Act 4</string>
     <string name="title_section5">Act 5</string>
+    <string name="stats_section1">Overview</string>
+    <string name="stats_section2">Offensive</string>
+    <string name="stats_section3">Defensive</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
     <string-array name="action_list">
         <item>Region: US</item>
         <item>Region: EU</item>
         <item>Region: KR</item>
         <item>Region: TW</item>
     </string-array>
+
+    <string name="title_activity_stats">StatsActivity</string>
+
 </resources>

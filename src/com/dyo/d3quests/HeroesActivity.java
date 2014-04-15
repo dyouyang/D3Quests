@@ -241,7 +241,7 @@ inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 					long id) {
 				String item = ((TextView)view).getText().toString();
 				
-				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
+				Intent i = new Intent(view.getContext(), StatsActivity.class);
 				Hero hero = (Hero)adapter.getItem(position);
 				i.putExtra("heroId", hero.id);
 				i.putExtra("heroName", hero.name);
