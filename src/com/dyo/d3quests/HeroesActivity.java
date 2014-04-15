@@ -511,12 +511,8 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		public void onItemClick(AdapterView<?> parent, View v, int position,
 				long arg3) {
 			
+			// Click on a saved hero opens the quest completion activity for that hero.
 			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
-			
-		    // Highlight the selected item, update the title, and close the drawer
-		    //mDrawerList.setItemChecked(position, true);
-		    //mDrawerLayout.closeDrawer(mDrawerList);
-		    
 			Intent i = new Intent(v.getContext(), QuestsActivitySwipe.class);
 			i.putExtra("heroId", Integer.valueOf(hero.getHeroId()));
 			i.putExtra("heroName", hero.getHeroName());
@@ -539,12 +535,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		@Override
 		public boolean onItemLongClick(AdapterView<?> arg0, View v,
 				int position, long arg3) {
-			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 			
-		    // Highlight the selected item, update the title, and close the drawer
-		    //mDrawerList.setItemChecked(position, true);
-		    //mDrawerLayout.closeDrawer(mDrawerList);
-		    
+			// Long click deletes the saved hero from the list and db.
+			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 		    datasource.deleteSavedHero(hero);
 		    drawerAdapter.remove(hero);
 		    drawerAdapter.notifyDataSetChanged();
