@@ -226,8 +226,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 				editor.commit();
 				
 				// Gets the URL from the UI's text field.
-		        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s-%s/",
-		        		region, battleTag, battleTagNum);
+		        String stringUrl = APIUtils.buildURL(region, battleTag, battleTagNum);
 		        ConnectivityManager connMgr = (ConnectivityManager) 
 		            getSystemService(Context.CONNECTIVITY_SERVICE);
 		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -239,18 +238,18 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 			}
 		});
 		
-		heroesView = (ListView) findViewById(R.id.missingQuests);
+		// List all heroes under the inputted account.
+		heroesView = (ListView) findViewById(R.id.heroes_list);
     	heroesListAdapter = new ArrayAdapter<Hero>(this, 
     	        android.R.layout.simple_list_item_1, heroesList);	
     	heroesView.setAdapter(heroesListAdapter);	
-    	
     	heroesView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				String item = ((TextView)view).getText().toString();
 				
+				// Send the hero data over to quests activity.
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)heroesListAdapter.getItem(position);
 				i.putExtra("heroId", hero.id);
@@ -272,23 +271,22 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 			}
 		});
 
-    	// Auto load heroes on first app open
+    	// Auto load heroes on first app open if we have filled in the battle tag from settings.
     	if (battleTagInput.getText().toString().length() > 0
     			&& battleTagNumInput.getText().toString().length() > 0) {
     		getHeroes.post(new Runnable() {
 				@Override
 				public void run() {
 					getHeroes.performClick();
-					
 				}
 			});
-    		
     	}
 	}
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
+		// Private Flurry API key, needs to be replaced with local own version.
 		FlurryAgent.onStartSession(this, getString(R.string.flurry_api_key));
 	}
 
@@ -318,7 +316,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 	        Intent Email = new Intent(Intent.ACTION_SEND);
 	        Email.setType("text/email");
 	        Email.putExtra(Intent.EXTRA_EMAIL, new String[] { "douyang@gmail.com" });
-	        Email.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+	        Email.putExtra(Intent.EXTRA_SUBJECT, "D3 Quest Helper Feedback");
 	        startActivity(Intent.createChooser(Email, "Send Feedback:"));
 	        return true;
 	    }
@@ -481,6 +479,8 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		
+		// Navigation item in action bar selects region for use in API calls
 		switch(itemPosition) {
 		case 0:
 			region = "us";
