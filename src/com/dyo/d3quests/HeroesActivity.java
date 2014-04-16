@@ -38,6 +38,9 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dyo.d3quests.db.HeroesDataSource;
+import com.dyo.d3quests.model.Hero;
+import com.dyo.d3quests.model.SavedHero;
 import com.flurry.android.FlurryAgent;
 
 /**
@@ -242,8 +245,8 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				// Send the hero data over to quests activity.
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
 				Hero hero = (Hero)heroesListAdapter.getItem(position);
-				i.putExtra("heroId", hero.id);
-				i.putExtra("heroName", hero.name);
+				i.putExtra("heroId", hero.getId());
+				i.putExtra("heroName", hero.getName());
 				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
 				i.putExtra("region", region);
 				startActivity(i);
@@ -256,7 +259,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int position, long id) {
 				Hero hero = (Hero)heroesListAdapter.getItem(position);
-				addSavedHero(hero.id, hero.name, hero.level, hero.d3class, battleTag + "-" + battleTagNum, region);
+				addSavedHero(hero.getId(), hero.getName(), hero.getLevel(), hero.getD3class(), battleTag + "-" + battleTagNum, region);
 				return true;
 			}
 		});

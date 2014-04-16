@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dyo.d3quests;
+package com.dyo.d3quests.model;
 
 /**
  * @author yinglong

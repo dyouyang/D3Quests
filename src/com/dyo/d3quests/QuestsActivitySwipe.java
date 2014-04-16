@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.dyo.d3quests.model.Quest;
 import com.flurry.android.FlurryAgent;
 
 import android.app.ActionBar;
