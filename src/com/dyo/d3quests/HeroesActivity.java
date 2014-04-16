@@ -1,12 +1,5 @@
 package com.dyo.d3quests;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,18 +12,15 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +47,7 @@ import com.flurry.android.FlurryAgent;
  * Selecting a hero will open up the details activity.  Also has a side navigation menu (which is used to store
  * favorited heroes)
  */
-public class HeroesActivity extends Activity implements OnNavigationListener{
+public class HeroesActivity extends Activity implements OnNavigationListener, D3TaskListener {
 
 	// The UI consists of battle tag input, a button to get heroes,
 	// and the list of heroes for an account.
@@ -231,7 +221,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 		            getSystemService(Context.CONNECTIVITY_SERVICE);
 		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		        if (networkInfo != null && networkInfo.isConnected()) {
-		            new getD3DataTask().execute(stringUrl);
+		            new GetD3DataTask(HeroesActivity.this, HeroesActivity.this).execute(stringUrl);
 		        } else {
 		            Toast.makeText(getApplicationContext(), "No network connection.", Toast.LENGTH_LONG).show();
 		        }
@@ -335,41 +325,6 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
- 
-	public class getD3DataTask extends AsyncTask<String, Void, String> {
-    	ProgressDialog mProgress;
-
-        @Override
-		protected void onPreExecute() {
-        	super.onPreExecute();
-        	mProgress = new ProgressDialog(HeroesActivity.this);
-        	mProgress.setMessage("Getting heroes...");
-			mProgress.show();
-			
-		}
-		@Override
-        protected String doInBackground(String... urls) {
-              
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                return downloadUrl(urls[0]);
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-        	heroesListAdapter.clear();
-        	parseHeroes(result);
-        	heroesListAdapter.notifyDataSetChanged();
-        	mProgress.hide();
-        	// TODO: Handle updates better (without notifying).
-            //missingQuests.setText(heroesList.toString());
-
-       }
-
-    }
 	
     private void parseHeroes(String json) {
     	JSONObject profile;
@@ -433,49 +388,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
     	drawerAdapter.notifyDataSetChanged(); 
 	}
 
-	private String downloadUrl(String myurl) throws IOException {
-        InputStream is = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
-        int len = 99999;
-            
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d("D3", "The response is: " + response);
-            is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            String contentAsString = readIt(is, len);
-            return contentAsString;
-            
-        // Makes sure that the InputStream is closed after the app is
-        // finished using it.
-        } finally {
-            if (is != null) {
-                is.close();
-            } 
-        }
-    }
-    
- // Reads an InputStream and converts it to a String.
-    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        BufferedReader reader = null;
-        reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")); 
-        StringBuilder finalString = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-        	finalString.append(line);
-        }
-        return finalString.toString();
-    }
+	
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -545,6 +458,14 @@ public class HeroesActivity extends Activity implements OnNavigationListener{
 			return true;
 		}
 
+	}
+
+	@Override
+	public void onTaskFinished(String result) {
+		
+    	heroesListAdapter.clear();
+    	parseHeroes((String)result);
+    	heroesListAdapter.notifyDataSetChanged();
 	}
 	
 }
