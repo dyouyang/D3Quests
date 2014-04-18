@@ -50,7 +50,7 @@ import com.flurry.android.FlurryAgent;
  * Selecting a hero will open up the details activity.  Also has a side navigation menu (which is used to store
  * favorited heroes)
  */
-public class HeroesActivity extends Activity implements OnNavigationListener, D3TaskListener {
+public class HeroesActivity extends Activity implements OnNavigationListener, D3TaskListener<String> {
 
 	// The UI consists of battle tag input, a button to get heroes,
 	// and the list of heroes for an account.

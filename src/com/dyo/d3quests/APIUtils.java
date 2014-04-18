@@ -26,6 +26,12 @@ public class APIUtils {
 		return  String.format("http://%s.battle.net/api/d3/profile/%s-%s/",
 	    		region, battleTag, battleTagNum);
 	}
+	
+	public static String buildURL (String region, String battleTag, String battleTagNum, String heroId) {
+		return  String.format("http://%s.battle.net/api/d3/profile/%s/hero/%d",
+	    		region, battleTag, battleTagNum, heroId);
+	}
+
 
 	public static String convertHumanToAPI(String battleTag) {
 		return battleTag.replace('#', '-');
