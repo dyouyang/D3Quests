@@ -59,7 +59,7 @@ public class GetD3DataTask extends AsyncTask<String, Void, String> {
     @Override
     public void onPostExecute(String result) {
     	super.onPostExecute(result);
-    	mProgress.hide();
+    	mProgress.dismiss();
     	listener.onTaskFinished(result);
 	}
 
