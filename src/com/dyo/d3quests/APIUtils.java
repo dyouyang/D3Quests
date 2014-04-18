@@ -5,7 +5,7 @@ package com.dyo.d3quests;
 
 /**
  * @author yinglong
- *
+ * Static methods to help with calling the Diablo 3 API
  */
 public class APIUtils {
 

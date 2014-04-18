@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dyo.d3quests;
 
@@ -18,18 +18,18 @@ import android.util.Log;
 
 /**
  * @author yinglong
- * 
+ *
  * Generic task to call Blizzard's Diablo 3 REST API with a constructed URL. Returns the JSON response.
  */
 public class GetD3DataTask extends AsyncTask<String, Void, String> {
 
 	ProgressDialog mProgress;
 
-	// Context and listener are both the activity that is initiating this task, 
+	// Context and listener are both the activity that is initiating this task,
 	// and so needs to show a progress dialog and be notified when the task
 	// is finished.
-	private Context context;
-	private D3TaskListener<String> listener;
+	private final Context context;
+	private final D3TaskListener<String> listener;
 
     public GetD3DataTask(Context context, D3TaskListener<String> listener) {
 		this.context = context;
@@ -40,10 +40,10 @@ public class GetD3DataTask extends AsyncTask<String, Void, String> {
 	protected void onPreExecute() {
     	super.onPreExecute();
     	mProgress = new ProgressDialog(context);
-    	mProgress.setMessage("Getting heroes...");
+    	mProgress.setMessage(context.getString(R.string.loading_dialog));
 		mProgress.show();
 	}
-    
+
 	@Override
     protected String doInBackground(String... urls) {
 
@@ -54,7 +54,7 @@ public class GetD3DataTask extends AsyncTask<String, Void, String> {
             return "Unable to retrieve web page. URL may be invalid.";
         }
     }
-	
+
     // Hide the progress dialog and notify calling activity of result.
     @Override
     public void onPostExecute(String result) {
@@ -82,7 +82,7 @@ public class GetD3DataTask extends AsyncTask<String, Void, String> {
             // Convert the InputStream into a string
             String contentAsString = readIt(is);
             return contentAsString;
-            
+
         // Makes sure that the InputStream is closed after the app is
         // finished using it.
         } finally {
@@ -91,11 +91,11 @@ public class GetD3DataTask extends AsyncTask<String, Void, String> {
             }
         }
     }
-    
+
  // Reads an InputStream and converts it to a String.
     public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
         BufferedReader reader = null;
-        reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")); 
+        reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
         StringBuilder finalString = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
