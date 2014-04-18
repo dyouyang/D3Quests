@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dyo.d3quests;
 
@@ -10,7 +10,7 @@ package com.dyo.d3quests;
 public class APIUtils {
 
 	/**
-	 * 
+	 *
 	 */
 	public APIUtils() {
 		// TODO Auto-generated constructor stub
@@ -26,9 +26,9 @@ public class APIUtils {
 		return  String.format("http://%s.battle.net/api/d3/profile/%s-%s/",
 	    		region, battleTag, battleTagNum);
 	}
-	
+
 	public static String buildURL (String region, String battleTag, String battleTagNum, String heroId) {
-		return  String.format("http://%s.battle.net/api/d3/profile/%s/hero/%d",
+		return  String.format("http://%s.battle.net/api/d3/profile/%s/hero/%s",
 	    		region, battleTag, battleTagNum, heroId);
 	}
 
@@ -36,7 +36,7 @@ public class APIUtils {
 	public static String convertHumanToAPI(String battleTag) {
 		return battleTag.replace('#', '-');
 	}
-	
+
 	public static String convertAPIToHuman(String battleTag) {
 		return battleTag.replace('-', '#');
 	}

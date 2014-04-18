@@ -58,7 +58,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	ViewPager mViewPager;
 
 	// Currently viewed hero.
-	private static int heroId;
+	private static String heroId;
 	private String name;
 	private static String region;
 	private static String battleTagFull;
@@ -73,7 +73,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quests_activity_swipe);
 
-		heroId = getIntent().getExtras().getInt("heroId");
+		heroId = getIntent().getExtras().getString("heroId");
 		name = getIntent().getExtras().getString("heroName");
 		battleTagFull = getIntent().getExtras().getString("battleTagFull");
 		region = getIntent().getExtras().getString("region");
@@ -117,7 +117,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		}
 
 		// Gets the URL from the UI's text field.
-        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s/hero/%d",
+        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s/hero/%s",
         		region, battleTagFull, heroId);
         ConnectivityManager connMgr = (ConnectivityManager)
             getSystemService(Context.CONNECTIVITY_SERVICE);

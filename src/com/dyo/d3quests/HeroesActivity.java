@@ -45,7 +45,7 @@ import com.flurry.android.FlurryAgent;
 
 /**
  * @author yinglong
- * 
+ *
  * Main activity of the app.  Allows user to input a battle tag to retrieve a list of heroes on the account.
  * Selecting a hero will open up the details activity.  Also has a side navigation menu (which is used to store
  * favorited heroes)
@@ -58,7 +58,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	private EditText battleTagNumInput;
 	private Button getHeroes;
 	private ListView heroesView;
-	
+
 	// Variables related to an account.
 	private String battleTag;
 	private String battleTagNum;
@@ -69,7 +69,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 
 	// Spinner for account region.
 	SpinnerAdapter mSpinnerAdapter;
-	private String [] regions = {"us", "eu", "kr", "tw"};
+	private final String [] regions = {"us", "eu", "kr", "tw"};
 
 	// Autocomplete previously entered battle tags.
 	SharedPreferences settings;
@@ -85,7 +85,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 
 	// Datasource to access saved heroes DB.
 	private HeroesDataSource datasource;
-	
+
 	ActionBar actionBar;
 
 	@Override
@@ -105,22 +105,24 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		datasource = new HeroesDataSource(this);
 		datasource.open();
 		List<SavedHero> savedHeroes = datasource.getAllHeroes();
-		
+
 		// Set up navigation drawer for saved heroes.
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
         		R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
-        	
+
             /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
+            @Override
+			public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 //getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
+            @Override
+			public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 //getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -135,14 +137,14 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
- 
+
         // Set the adapter for the list view
         drawerAdapter = new ArrayAdapter<SavedHero>(this, R.layout.drawer_list_item, savedHeroes);
         mDrawerList.setAdapter(drawerAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.setOnItemLongClickListener(new DrawerItemLongClickListener());
-        
+
         // Retrieve saved accounts from sharedprefs for battle tag autocomplete.
 		settings = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 		recentAccounts = settings.getStringSet("recentAccounts", new HashSet<String>());
@@ -154,7 +156,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		battleTagInput = (AutoCompleteTextView) findViewById(R.id.battletag);
 		battleTagInput.setAdapter(adapterAutoComplete);
 		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
-		
+
 		// Onclick for an autocomplete suggestion.
 		battleTagInput.setOnItemClickListener(new OnItemClickListener() {
 
@@ -179,7 +181,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		// Fill in id from last button click from shared prefs.
 		// Note, fields must be set explicity once first for auto-loading list on resume feature.
 		battleTag = settings.getString("battleTag", "");
-		battleTagInput.setText(battleTag); 
+		battleTagInput.setText(battleTag);
 		battleTagNum = settings.getString("battleTagNum", "");
 		battleTagNumInput.setText(battleTagNum);
 		// Default region to 0, or US
@@ -193,7 +195,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 			@Override
 			public void onClick(View v) {
 				InputMethodManager inputManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE); 
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                            InputMethodManager.HIDE_NOT_ALWAYS);
 
@@ -210,17 +212,17 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 					heroesListAdapter.clear();
 					return;
 				}
-				
+
 				// Save id.
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString("battleTag", battleTag);
 				editor.putString("battleTagNum", battleTagNum);
 				editor.putInt("region", actionBar.getSelectedNavigationIndex());
 				editor.commit();
-				
+
 				// Gets the URL from the UI's text field.
 		        String stringUrl = APIUtils.buildURL(region, battleTag, battleTagNum);
-		        ConnectivityManager connMgr = (ConnectivityManager) 
+		        ConnectivityManager connMgr = (ConnectivityManager)
 		            getSystemService(Context.CONNECTIVITY_SERVICE);
 		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		        if (networkInfo != null && networkInfo.isConnected()) {
@@ -230,21 +232,21 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		        }
 			}
 		});
-		
+
 		// List all heroes under the inputted account.
 		heroesView = (ListView) findViewById(R.id.heroes_list);
-    	heroesListAdapter = new ArrayAdapter<Hero>(this, 
-    	        android.R.layout.simple_list_item_1, heroesList);	
-    	heroesView.setAdapter(heroesListAdapter);	
+    	heroesListAdapter = new ArrayAdapter<Hero>(this,
+    	        android.R.layout.simple_list_item_1, heroesList);
+    	heroesView.setAdapter(heroesListAdapter);
     	heroesView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				
+
 				// Send the hero data over to quests activity.
 				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
-				Hero hero = (Hero)heroesListAdapter.getItem(position);
+				Hero hero = heroesListAdapter.getItem(position);
 				i.putExtra("heroId", hero.getId());
 				i.putExtra("heroName", hero.getName());
 				i.putExtra("battleTagFull", battleTag + "-" + battleTagNum);
@@ -252,13 +254,13 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				startActivity(i);
 			}
 		});
-    	
+
     	heroesView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int position, long id) {
-				Hero hero = (Hero)heroesListAdapter.getItem(position);
+				Hero hero = heroesListAdapter.getItem(position);
 				addSavedHero(hero.getId(), hero.getName(), hero.getLevel(), hero.getD3class(), battleTag + "-" + battleTagNum, region);
 				return true;
 			}
@@ -275,7 +277,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 			});
     	}
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -298,12 +300,12 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-    	
+
     	// Handle the drawer app icon.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        
+
 		switch (item.getItemId()) {
 		case R.id.action_feedback:
 	        Intent Email = new Intent(Intent.ACTION_SEND);
@@ -315,7 +317,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	    }
 		return false;
 	}
-  
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -328,25 +330,25 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-	
+
     private void parseHeroes(String json) {
     	JSONObject profile;
     	try {
 			profile = new JSONObject(json);
 
 			JSONArray heroes = profile.getJSONArray("heroes");
-			
+
 			for(int i = 0; i < heroes.length(); i++) {
 				JSONObject hero = heroes.getJSONObject(i);
 				String heroName = hero.getString("name");
 				int level = hero.getInt("level");
 				String d3class = hero.getString("class");
-				int heroId = hero.getInt("id");
+				String heroId = hero.getString("id");
 				heroesList.add(new Hero(heroId, heroName, level, d3class));
 			}
-			
+
 			addToRecentAccounts(battleTag + "#" + battleTagNum);
-			
+
 		} catch (JSONException e) {
 			try {
 				profile = new JSONObject(json);
@@ -356,14 +358,14 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				Toast.makeText(getApplicationContext(), "Unknown Diablo 3 API error", Toast.LENGTH_LONG).show();
 				e1.printStackTrace();
 			}
-			
+
 			e.printStackTrace();
 		}
-    	
+
     }
-    
+
     private void addToRecentAccounts(String account) {
-    	
+
     	if (!recentAccountsList.contains(account)) {
     		recentAccountsList.add(account);
     		// AutocompleteTextView makes a copy of the data when the adapter is created, so
@@ -378,7 +380,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
     	}
 	}
 
-	private void addSavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
+	private void addSavedHero(String id, String name, int level, String d3class, String battletagFull, String region) {
     	SavedHero newHero = new SavedHero(id, name, level, d3class, battletagFull, region);
     	List<SavedHero> queryResult = datasource.findHero(newHero);
     	if (queryResult.size() < 1) {
@@ -388,14 +390,14 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
     	} else {
     		Toast.makeText(getApplicationContext(), newHero + " already in saved heroes.", Toast.LENGTH_SHORT).show();
     	}
-    	drawerAdapter.notifyDataSetChanged(); 
+    	drawerAdapter.notifyDataSetChanged();
 	}
 
-	
+
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		
+
 		// Navigation item in action bar selects region for use in API calls
 		switch(itemPosition) {
 		case 0:
@@ -413,7 +415,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @author yinglong
 	 *
@@ -426,19 +428,19 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		@Override
 		public void onItemClick(AdapterView<?> parent, View v, int position,
 				long arg3) {
-			
+
 			// Click on a saved hero opens the quest completion activity for that hero.
 			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 			Intent i = new Intent(v.getContext(), QuestsActivitySwipe.class);
-			i.putExtra("heroId", Integer.valueOf(hero.getHeroId()));
+			i.putExtra("heroId", hero.getHeroId());
 			i.putExtra("heroName", hero.getHeroName());
 			i.putExtra("battleTagFull", hero.getBattleTagFull());
 			i.putExtra("region", hero.getRegion());
-			startActivity(i);		
+			startActivity(i);
 		}
-		
+
 	}
-	
+
 	/**
 	 * @author yinglong
 	 *
@@ -451,7 +453,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		@Override
 		public boolean onItemLongClick(AdapterView<?> arg0, View v,
 				int position, long arg3) {
-			
+
 			// Long click deletes the saved hero from the list and db.
 			SavedHero hero = (SavedHero) mDrawerList.getItemAtPosition(position);
 		    datasource.deleteSavedHero(hero);
@@ -465,10 +467,10 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 
 	@Override
 	public void onTaskFinished(String result) {
-		
+
     	heroesListAdapter.clear();
-    	parseHeroes((String)result);
+    	parseHeroes(result);
     	heroesListAdapter.notifyDataSetChanged();
 	}
-	
+
 }
