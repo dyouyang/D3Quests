@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dyo.d3quests;
+package com.dyo.d3quests.db;
 
 import android.content.Context;
 import android.database.DatabaseErrorHandler;

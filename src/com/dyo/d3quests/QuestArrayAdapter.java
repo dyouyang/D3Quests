@@ -5,6 +5,8 @@ package com.dyo.d3quests;
 
 import java.util.List;
 
+import com.dyo.d3quests.model.Quest;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,7 @@ public class QuestArrayAdapter extends ArrayAdapter<Quest> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = super.getView(position, convertView, parent);
 		Quest quest = getItem(position);
-		((CheckedTextView)v).setChecked(quest.complete);
+		((CheckedTextView)v).setChecked(quest.isComplete());
 		return v;
 	}
 

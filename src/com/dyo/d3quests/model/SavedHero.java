@@ -1,7 +1,7 @@
 /**
- * 
+ *
  */
-package com.dyo.d3quests;
+package com.dyo.d3quests.model;
 
 /**
  * @author yinglong
@@ -16,18 +16,18 @@ public class SavedHero {
 	private String region;
 	private int heroLevel;
 	private String heroClass;
-	
+
 	/**
-	 * @param region 
-	 * @param battletagFull 
-	 * @param d3class 
-	 * @param level 
-	 * @param name 
-	 * @param id 
-	 * 
+	 * @param region
+	 * @param battletagFull
+	 * @param d3class
+	 * @param level
+	 * @param name
+	 * @param heroId
+	 *
 	 */
-	public SavedHero(int id, String name, int level, String d3class, String battletagFull, String region) {
-		this.heroId = Integer.toString(id);
+	public SavedHero(String heroId, String name, int level, String d3class, String battletagFull, String region) {
+		this.heroId = heroId;
 		this.heroName = name;
 		this.heroLevel = level;
 		this.heroClass = d3class;
@@ -100,5 +100,5 @@ public class SavedHero {
 		return String.format("%s (%s)", heroName, heroClass.replace("-", " "));
 	}
 
-	
+
 }
