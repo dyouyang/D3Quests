@@ -34,7 +34,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:dropDownWidth="wrap_content"/>
 
     <Button
-        android:id="@+id/findQuests"
+        android:id="@+id/get_heroes_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/battletag"
@@ -42,12 +42,12 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:text="Get heroes" />
 
     <ListView
-        android:id="@+id/missingQuests"
+        android:id="@+id/heroes_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tip"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/findQuests" >
+        android:layout_below="@+id/get_heroes_button" >
 
     </ListView>
 

@@ -1,10 +1,12 @@
 /**
  * 
  */
-package com.dyo.d3quests;
+package com.dyo.d3quests.db;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.dyo.d3quests.model.SavedHero;
 
 import android.content.ContentValues;
 import android.content.Context;

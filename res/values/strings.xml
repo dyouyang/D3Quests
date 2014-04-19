@@ -2,21 +2,31 @@
 <resources>
 
     <string name="app_name">D3 Quest Helper</string>
+    
     <string name="action_settings">Settings</string>
     <string name="action_feedback">Feedback</string>
+    
     <string name="title_activity_quests">QuestsActivity</string>
     <string name="title_activity_quests_activity_swipe">QuestsActivitySwipe</string>
+    
     <string name="title_section1">Act 1</string>
     <string name="title_section2">Act 2</string>
     <string name="title_section3">Act 3</string>
     <string name="title_section4">Act 4</string>
     <string name="title_section5">Act 5</string>
+    
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    
     <string-array name="action_list">
         <item>Region: US</item>
         <item>Region: EU</item>
         <item>Region: KR</item>
         <item>Region: TW</item>
     </string-array>
+
+	<string name="loading_dialog">Loading...</string>    
+	<string name="d3_api_maintenance">Sorry! Blizzard\'s Diablo 3 database and API are under maintenance.</string>
+	<string name="quest_tip_delay">Note: The diablo 3 database has a small delay, so completion may not always be up to date.</string>
+	<string name="quest_tip_reset">Tip: In order to enable the reset quests button in-game, complete all acts.</string>
 </resources>
