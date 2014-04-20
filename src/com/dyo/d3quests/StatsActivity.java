@@ -32,7 +32,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dyo.d3quests.model.CompletedQuests;
+import com.dyo.d3quests.model.HeroModel;
 import com.dyo.d3quests.model.Quest;
 
 public class StatsActivity extends Activity implements ActionBar.TabListener, D3TaskListener {
@@ -56,7 +56,7 @@ public class StatsActivity extends Activity implements ActionBar.TabListener, D3
 	private static String region;
 	private static String battleTagFull;
 
-	private static CompletedQuests completedQuests;
+	private static HeroModel heroModel;
 	private static List<D3ModelUpdateListener> modelUpdateListeners;
 
 	@Override
@@ -105,7 +105,7 @@ public class StatsActivity extends Activity implements ActionBar.TabListener, D3
 					.setTabListener(this));
 		}
 
-		completedQuests = new CompletedQuests();
+		heroModel = HeroModel.getInstance();
 		modelUpdateListeners = new ArrayList<D3ModelUpdateListener>();
 
 		// Gets the URL from the UI's text field.
@@ -278,9 +278,9 @@ public class StatsActivity extends Activity implements ActionBar.TabListener, D3
 			// If the model isn't updated yet, wait for listener
 			// callback later to take care of it.  This usually occurs on the
 			// first two acts due to ViewPager instantiating them on load.
-			if (!completedQuests.isUpdated()) return;
+			if (!heroModel.isUpdated()) return;
 
-			HashMap<String, Integer> stats = completedQuests.getStats();
+			HashMap<String, Integer> stats = heroModel.getStats();
         	damageView.setText(stats.get("damage").toString());
         	strengthView.setText(stats.get("strength").toString());
         	dexterityView.setText(stats.get("dexterity").toString());
@@ -337,7 +337,7 @@ public class StatsActivity extends Activity implements ActionBar.TabListener, D3
 			Iterator keys = jsonStats.keys();
 			while (keys.hasNext()) {
 				String key = (String) keys.next();
-				completedQuests.getStats().put(key, jsonStats.getInt(key));
+				heroModel.getStats().put(key, jsonStats.getInt(key));
 			}
 
 			JSONObject progression = hero.getJSONObject("progression");
@@ -356,9 +356,9 @@ public class StatsActivity extends Activity implements ActionBar.TabListener, D3
 					Quest thisQuest = new Quest(slug, name);
 					questsList.add(thisQuest);
 				}
-				completedQuests.getProgression().put(key, questsList);
+				heroModel.getProgression().put(key, questsList);
 			}
-			completedQuests.setUpdated(true);
+			heroModel.setUpdated(true);
 			for (D3ModelUpdateListener listener : modelUpdateListeners) {
 				listener.onUpdateFinished();
 			}
