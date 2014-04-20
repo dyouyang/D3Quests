@@ -11,10 +11,12 @@ import java.util.HashMap;
 public class CompletedQuests {
 
 	private HashMap<String, ArrayList<Quest>> progression;
+	private HashMap<String, Integer> stats;
 	private boolean updated;
 
 	public CompletedQuests() {
 		setProgression(new HashMap<String, ArrayList<Quest>>());
+		setStats(new HashMap<String, Integer>());
 		setUpdated(false);
 	}
 
@@ -44,6 +46,14 @@ public class CompletedQuests {
 	 */
 	public void setProgression(HashMap<String, ArrayList<Quest>> progression) {
 		this.progression = progression;
+	}
+
+	public HashMap<String, Integer> getStats() {
+		return stats;
+	}
+
+	public void setStats(HashMap<String, Integer> stats) {
+		this.stats = stats;
 	}
 
 }
