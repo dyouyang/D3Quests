@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		setContentView(R.layout.activity_quests_activity_swipe);
 
 		heroId = getIntent().getExtras().getString("heroId");
@@ -92,6 +94,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setBackgroundResource(R.drawable.background_tyrael);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
@@ -269,7 +272,6 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			View rootView = inflater.inflate(
 					R.layout.fragment_quests_activity_swipe, container,
 					false);
-
 			currentAct = getArguments().getInt(ARG_SECTION_NUMBER);
 			initAllQuests(currentAct);
 

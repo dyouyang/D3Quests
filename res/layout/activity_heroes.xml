@@ -17,6 +17,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_tyrael"
     android:focusableInTouchMode="true"
     tools:context=".HeroesActivity" >
 
@@ -45,6 +46,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/heroes_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dp"
+        android:layout_margin="5dp"
         android:layout_above="@+id/tip"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/get_heroes_button" >
