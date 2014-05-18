@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="?android:attr/actionBarSize"
-    android:background="#4CFFFFFF"
+    android:background="#6CFFFFFF"
     tools:context=".QuestsActivitySwipe$DummySectionFragment" >
 
     <TextView
