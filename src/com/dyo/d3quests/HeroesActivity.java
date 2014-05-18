@@ -93,6 +93,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
 
+		getWindow().setBackgroundDrawableResource(R.drawable.background_tyrael);
 		// Set up action bar with spinner.
 		setTitle("D3 Helper");
 		actionBar = getActionBar();
@@ -235,8 +236,8 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 
 		// List all heroes under the inputted account.
 		heroesView = (ListView) findViewById(R.id.heroes_list);
-    	heroesListAdapter = new ArrayAdapter<Hero>(this,
-    	        android.R.layout.simple_list_item_1, heroesList);
+    	heroesListAdapter = new HeroesArrayAdapter(this,
+    	        R.layout.heroes_list_item, heroesList);
     	heroesView.setAdapter(heroesListAdapter);
     	heroesView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -342,9 +343,10 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				JSONObject hero = heroes.getJSONObject(i);
 				String heroName = hero.getString("name");
 				int level = hero.getInt("level");
+				int gender = hero.getInt("gender");
 				String d3class = hero.getString("class");
 				String heroId = hero.getString("id");
-				heroesList.add(new Hero(heroId, heroName, level, d3class));
+				heroesList.add(new Hero(heroId, heroName, level, gender, d3class));
 			}
 
 			addToRecentAccounts(battleTag + "#" + battleTagNum);

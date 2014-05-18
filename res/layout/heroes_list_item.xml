@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6CFFFFFF" >
+
+    <ImageView
+        android:id="@+id/hero_thumbnail"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/barb_male" />
+
+    <TextView
+        android:id="@+id/hero_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/hero_thumbnail"
+        android:layout_toRightOf="@+id/hero_thumbnail"
+        android:text="TextView"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/hero_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hero_name"
+        android:layout_toRightOf="@+id/hero_thumbnail"
+        android:text="TextView" />
+
+</RelativeLayout>

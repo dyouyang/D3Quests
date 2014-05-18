@@ -15,6 +15,7 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Ros</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Ros</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Ros</item>
+        <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Ros</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Ros</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_ros</item>
@@ -28,7 +29,7 @@
 
     <style name="ActionBar.Solid.Ros" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_ros</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_ros</item>
+        <item name="android:backgroundStacked">@color/tab_background</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_ros</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Ros</item>
     </style>
@@ -50,6 +51,11 @@
         <item name="android:background">@drawable/tab_indicator_ab_ros</item>
     </style>
 
+    <style name="MyActionBarTabText"
+           parent="@android:style/Widget.Holo.ActionBar.TabText">
+        <item name="android:textColor">@color/actionbartab_text</item>
+    </style>
+    
     <style name="DropDownNav.Ros" parent="@android:style/Widget.Holo.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_ros</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_ros</item>

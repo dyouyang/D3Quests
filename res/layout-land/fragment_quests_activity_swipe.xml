@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="?android:attr/actionBarSize"
-    android:background="#6CFFFFFF"
+    android:background="#4CFFFFFF"
     tools:context=".QuestsActivitySwipe$DummySectionFragment" >
 
     <TextView
@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:paddingTop="?android:attr/actionBarSize"
         android:text="Loading quest completion..." />
 
     <ListView
