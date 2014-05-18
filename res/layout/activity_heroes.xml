@@ -20,7 +20,7 @@
                 android:id="@+id/top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#8CFFFFFF"
+                android:background="#ACFFFFFF"
                 android:focusableInTouchMode="true"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp" >
