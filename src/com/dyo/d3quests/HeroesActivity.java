@@ -93,6 +93,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_heroes);
 
+		getWindow().setBackgroundDrawableResource(R.drawable.background_tyrael);
 		// Set up action bar with spinner.
 		setTitle("D3 Helper");
 		actionBar = getActionBar();

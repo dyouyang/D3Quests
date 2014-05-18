@@ -75,6 +75,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		setContentView(R.layout.activity_quests_activity_swipe);
 
+		getWindow().setBackgroundDrawableResource(R.drawable.background_tyrael);
 		heroId = getIntent().getExtras().getString("heroId");
 		name = getIntent().getExtras().getString("heroName");
 		battleTagFull = getIntent().getExtras().getString("battleTagFull");
@@ -94,7 +95,6 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setBackgroundResource(R.drawable.background_tyrael);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
