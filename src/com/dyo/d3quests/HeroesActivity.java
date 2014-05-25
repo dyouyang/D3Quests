@@ -157,7 +157,6 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 			public void onClick(View v) {
 				heroesListAdapter.clear();
 				mDrawerLayout.closeDrawers();
-
 			}
 		});
 
