@@ -33,7 +33,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -231,6 +233,20 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		        } else {
 		            Toast.makeText(getApplicationContext(), "No network connection.", Toast.LENGTH_LONG).show();
 		        }
+
+		        final RelativeLayout topLayout = (RelativeLayout) findViewById(R.id.top_layout);
+		        final LinearLayout drawerBattletag = (LinearLayout) findViewById(R.id.drawer_battletag);
+		        final TextView topLayoutSmall = (TextView) findViewById(R.id.drawer_battletag_label);
+		        topLayout.setVisibility(View.GONE);
+		        topLayoutSmall.setText(battleTag + "#" + battleTagNum);
+		        drawerBattletag.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						topLayout.setVisibility(View.VISIBLE);
+
+					}
+				});
 			}
 		});
 
