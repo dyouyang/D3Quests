@@ -256,10 +256,6 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		        } else {
 		            Toast.makeText(getApplicationContext(), "No network connection.", Toast.LENGTH_LONG).show();
 		        }
-
-
-
-
 			}
 		});
 
