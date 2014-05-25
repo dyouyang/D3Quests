@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
-            android:text="Saved Heroes"
+            android:text="Enter Battle Tag"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 

@@ -65,6 +65,8 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	private String battleTag;
 	private String battleTagNum;
 	private String region = "us";
+	// Layout at top of screen with battle tag input fields.
+    private RelativeLayout battleTagInputLayout;
 
 	ArrayList<Hero> heroesList = new ArrayList<Hero>();
 	ArrayAdapter<Hero> heroesListAdapter;
@@ -84,6 +86,10 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ListView mDrawerList;
 	private ArrayAdapter<SavedHero> drawerAdapter;
+
+	// Battle Tag shown in left navigation drawer.
+    private LinearLayout drawerBattletag;
+    private TextView drawerBattleTagLabel;
 
 	// Datasource to access saved heroes DB.
 	private HeroesDataSource datasource;
@@ -141,6 +147,20 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
 
+        drawerBattletag = (LinearLayout) findViewById(R.id.drawer_battletag);
+        drawerBattleTagLabel = (TextView) findViewById(R.id.drawer_battletag_label);
+        drawerBattletag.setOnClickListener(new OnClickListener() {
+
+        	// When user taps on battle tag in left drawer, clear the list of heroes
+        	// and show battle tag input view.
+			@Override
+			public void onClick(View v) {
+				heroesListAdapter.clear();
+				mDrawerLayout.closeDrawers();
+
+			}
+		});
+
         // Set the adapter for the list view
         drawerAdapter = new ArrayAdapter<SavedHero>(this, R.layout.drawer_list_item, savedHeroes);
         mDrawerList.setAdapter(drawerAdapter);
@@ -159,7 +179,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		battleTagInput = (AutoCompleteTextView) findViewById(R.id.battletag);
 		battleTagInput.setAdapter(adapterAutoComplete);
 		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
-
+		battleTagInputLayout = (RelativeLayout) findViewById(R.id.top_layout);
 		// Onclick for an autocomplete suggestion.
 		battleTagInput.setOnItemClickListener(new OnItemClickListener() {
 
@@ -223,6 +243,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				editor.putInt("region", actionBar.getSelectedNavigationIndex());
 				editor.commit();
 
+				// Set the left navigation drawer battle tag label.
+		        drawerBattleTagLabel.setText(battleTag + "#" + battleTagNum);
+
 				// Gets the URL from the UI's text field.
 		        String stringUrl = APIUtils.buildURL(region, battleTag, battleTagNum);
 		        ConnectivityManager connMgr = (ConnectivityManager)
@@ -234,19 +257,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		            Toast.makeText(getApplicationContext(), "No network connection.", Toast.LENGTH_LONG).show();
 		        }
 
-		        final RelativeLayout topLayout = (RelativeLayout) findViewById(R.id.top_layout);
-		        final LinearLayout drawerBattletag = (LinearLayout) findViewById(R.id.drawer_battletag);
-		        final TextView topLayoutSmall = (TextView) findViewById(R.id.drawer_battletag_label);
-		        topLayout.setVisibility(View.GONE);
-		        topLayoutSmall.setText(battleTag + "#" + battleTagNum);
-		        drawerBattletag.setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						topLayout.setVisibility(View.VISIBLE);
 
-					}
-				});
+
 			}
 		});
 
@@ -255,6 +268,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
     	heroesListAdapter = new HeroesArrayAdapter(this,
     	        R.layout.heroes_list_item, heroesList);
     	heroesView.setAdapter(heroesListAdapter);
+    	heroesView.setEmptyView(battleTagInputLayout);
     	heroesView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
