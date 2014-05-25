@@ -21,6 +21,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,6 +97,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	private HeroesDataSource datasource;
 
 	ActionBar actionBar;
+
+	// Wraps list view in a swipe down to refresh pattern.
+	SwipeRefreshLayout refreshLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -302,6 +307,17 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				}
 			});
     	}
+
+    	// Allow swipe down to refresh the list of heroes.
+    	refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+    	refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				getHeroes.performClick();
+				refreshLayout.setRefreshing(false);
+			}
+		});
 	}
 
 	@Override
