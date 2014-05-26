@@ -12,11 +12,8 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -34,7 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dyo.d3quests.model.CompletedQuests;
+import com.dyo.d3quests.model.HeroModel;
 import com.dyo.d3quests.model.Quest;
 import com.flurry.android.FlurryAgent;
 
@@ -64,7 +61,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	private static String region;
 	private static String battleTagFull;
 
-	private static CompletedQuests completedQuests;
+	private static HeroModel heroModel;
 	private static boolean fullActCompleted[] = new boolean[5];
 
 	private List<D3ModelUpdateListener> modelUpdateListeners;
@@ -80,7 +77,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		name = getIntent().getExtras().getString("heroName");
 		battleTagFull = getIntent().getExtras().getString("battleTagFull");
 		region = getIntent().getExtras().getString("region");
-		completedQuests = new CompletedQuests();
+		heroModel = HeroModel.getInstance();
 		modelUpdateListeners = new ArrayList<D3ModelUpdateListener>();
 		setTitle(name);
 		final ActionBar actionBar = getActionBar();
@@ -120,16 +117,16 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		}
 
 		// Gets the URL from the UI's text field.
-        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s/hero/%s",
-        		region, battleTagFull, heroId);
-        ConnectivityManager connMgr = (ConnectivityManager)
-            getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            new GetD3DataTask(this, this).execute(stringUrl);
-        } else {
-        	Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
-        }
+//        String stringUrl = String.format("http://%s.battle.net/api/d3/profile/%s/hero/%s",
+//        		region, battleTagFull, heroId);
+//        ConnectivityManager connMgr = (ConnectivityManager)
+//            getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+//        if (networkInfo != null && networkInfo.isConnected()) {
+//            new GetD3DataTask(this, this).execute(stringUrl);
+//        } else {
+//        	Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
+//        }
 	}
 
 	@Override
@@ -354,11 +351,11 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				// If the model isn't updated yet, wait for listener
 				// callback later to take care of it.  This usually occurs on the
 				// first two acts due to ViewPager instantiating them on load.
-				if (!completedQuests.isUpdated()) return;
+				if (!heroModel.isUpdated()) return;
 
 				// Compare static all quests list with completed quests
 				// returned from API.
-				List<Quest> completed = completedQuests.getProgression().get("act"+currentAct);
+				List<Quest> completed = heroModel.getProgression().get("act"+currentAct);
 				for (int i = 0; i < completed.size(); i++) {
 					Quest thisQuest = completed.get(i);
 					if (actList.contains(thisQuest)) {
@@ -391,7 +388,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 		@Override
 		public void onUpdateFinished() {
 
-			// Callback when the completedQuests model is finished updating from API.
+			// Callback when the heroModel model is finished updating from API.
 			updateQuests();
 		}
 
@@ -420,9 +417,9 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 					Quest thisQuest = new Quest(slug, name);
 					questsList.add(thisQuest);
 				}
-				completedQuests.getProgression().put(key, questsList);
+				heroModel.getProgression().put(key, questsList);
 			}
-			completedQuests.setUpdated(true);
+			heroModel.setUpdated(true);
 			for (D3ModelUpdateListener listener : modelUpdateListeners) {
 				listener.onUpdateFinished();
 			}

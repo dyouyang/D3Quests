@@ -8,14 +8,25 @@ import java.util.HashMap;
  * Main model for quest completion.  Retrieved from D3 API and notifies all quest list
  * fragments when it is updated.
  */
-public class CompletedQuests {
+public class HeroModel {
+
+	private static HeroModel instance = null;
 
 	private HashMap<String, ArrayList<Quest>> progression;
+	private HashMap<String, Integer> stats;
 	private boolean updated;
 
-	public CompletedQuests() {
+	private HeroModel() {
 		setProgression(new HashMap<String, ArrayList<Quest>>());
+		setStats(new HashMap<String, Integer>());
 		setUpdated(false);
+	}
+
+	public static HeroModel getInstance() {
+		if (instance == null) {
+			instance = new HeroModel();
+		}
+		return instance;
 	}
 
 	/**
@@ -44,6 +55,14 @@ public class CompletedQuests {
 	 */
 	public void setProgression(HashMap<String, ArrayList<Quest>> progression) {
 		this.progression = progression;
+	}
+
+	public HashMap<String, Integer> getStats() {
+		return stats;
+	}
+
+	public void setStats(HashMap<String, Integer> stats) {
+		this.stats = stats;
 	}
 
 }

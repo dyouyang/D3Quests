@@ -18,8 +18,8 @@
         android:theme="@style/Theme.Ros" >
         <activity
             android:name="com.dyo.d3quests.HeroesActivity"
-            android:label="@string/app_name" 
-            android:launchMode="singleTop">
+            android:label="@string/app_name"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,13 +35,23 @@
                 android:value="com.dyo.d3quests.HeroesActivity" />
         </activity>
         <activity
-            android:name="com.dyo.d3quests.QuestsActivitySwipe"
-            android:label="@string/title_activity_quests_activity_swipe"
+            android:name="com.dyo.d3quests.StatsActivity"
+            android:label="@string/title_activity_stats"
+            android:launchMode="singleTop"
             android:parentActivityName="com.dyo.d3quests.HeroesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dyo.d3quests.HeroesActivity" />
         </activity>
+        <activity
+            android:name="com.dyo.d3quests.QuestsActivitySwipe"
+            android:label="@string/title_activity_quests_activity_swipe"
+            android:parentActivityName="com.dyo.d3quests.StatsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dyo.d3quests.StatsActivity" />
+        </activity>
+
     </application>
 
 </manifest>

@@ -280,7 +280,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 					long id) {
 
 				// Send the hero data over to quests activity.
-				Intent i = new Intent(view.getContext(), QuestsActivitySwipe.class);
+				Intent i = new Intent(view.getContext(), StatsActivity.class);
 				Hero hero = heroesListAdapter.getItem(position);
 				i.putExtra("heroId", hero.getId());
 				i.putExtra("heroName", hero.getName());
