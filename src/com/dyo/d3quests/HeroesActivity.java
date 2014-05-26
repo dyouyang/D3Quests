@@ -9,6 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
@@ -21,6 +24,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +38,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +71,8 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	private String battleTag;
 	private String battleTagNum;
 	private String region = "us";
+	// Layout at top of screen with battle tag input fields.
+    private RelativeLayout battleTagInputLayout;
 
 	ArrayList<Hero> heroesList = new ArrayList<Hero>();
 	ArrayAdapter<Hero> heroesListAdapter;
@@ -83,10 +93,17 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 	private ListView mDrawerList;
 	private ArrayAdapter<SavedHero> drawerAdapter;
 
+	// Battle Tag shown in left navigation drawer.
+    private LinearLayout drawerBattletag;
+    private TextView drawerBattleTagLabel;
+
 	// Datasource to access saved heroes DB.
 	private HeroesDataSource datasource;
 
 	ActionBar actionBar;
+
+	// Wraps list view in a swipe down to refresh pattern.
+	SwipeRefreshLayout refreshLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +156,19 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
 
+        drawerBattletag = (LinearLayout) findViewById(R.id.drawer_battletag);
+        drawerBattleTagLabel = (TextView) findViewById(R.id.drawer_battletag_label);
+        drawerBattletag.setOnClickListener(new OnClickListener() {
+
+        	// When user taps on battle tag in left drawer, clear the list of heroes
+        	// and show battle tag input view.
+			@Override
+			public void onClick(View v) {
+				heroesListAdapter.clear();
+				mDrawerLayout.closeDrawers();
+			}
+		});
+
         // Set the adapter for the list view
         drawerAdapter = new ArrayAdapter<SavedHero>(this, R.layout.drawer_list_item, savedHeroes);
         mDrawerList.setAdapter(drawerAdapter);
@@ -157,7 +187,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 		battleTagInput = (AutoCompleteTextView) findViewById(R.id.battletag);
 		battleTagInput.setAdapter(adapterAutoComplete);
 		battleTagNumInput = (EditText) findViewById(R.id.battletag_num);
-
+		battleTagInputLayout = (RelativeLayout) findViewById(R.id.top_layout);
 		// Onclick for an autocomplete suggestion.
 		battleTagInput.setOnItemClickListener(new OnItemClickListener() {
 
@@ -221,6 +251,9 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				editor.putInt("region", actionBar.getSelectedNavigationIndex());
 				editor.commit();
 
+				// Set the left navigation drawer battle tag label.
+		        drawerBattleTagLabel.setText(battleTag + "#" + battleTagNum);
+
 				// Gets the URL from the UI's text field.
 		        String stringUrl = APIUtils.buildURL(region, battleTag, battleTagNum);
 		        ConnectivityManager connMgr = (ConnectivityManager)
@@ -239,6 +272,7 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
     	heroesListAdapter = new HeroesArrayAdapter(this,
     	        R.layout.heroes_list_item, heroesList);
     	heroesView.setAdapter(heroesListAdapter);
+    	heroesView.setEmptyView(battleTagInputLayout);
     	heroesView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -277,6 +311,29 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 				}
 			});
     	}
+
+    	// Swipe down will clear the hero list, and show the battle tag input field.  At some point,
+    	// this should change to refresh only, once users understand that the input is hidden.
+    	refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+    	refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				heroesListAdapter.clear();
+				refreshLayout.setRefreshing(false);
+			}
+		});
+
+    	// Assign slide in and out animation to battle tag input.  We do this by modifying the
+    	// layout transition on the FrameLayout that wraps the battle tag input header.
+    	LayoutTransition transition = new LayoutTransition();
+    	AnimatorSet animatorOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.anim.slide_out_up);
+    	AnimatorSet animatorIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.anim.slide_in_down);
+    	transition.setAnimator(LayoutTransition.DISAPPEARING, animatorOut);
+    	transition.setAnimator(LayoutTransition.APPEARING, animatorIn);
+    	FrameLayout frame = (FrameLayout) findViewById(R.id.content_frame);
+    	frame.setLayoutTransition(transition);
+
 	}
 
 	@Override

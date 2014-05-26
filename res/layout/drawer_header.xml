@@ -4,27 +4,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/header"
+    <LinearLayout
+        android:id="@+id/drawer_battletag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:background="#000000"
+        android:orientation="horizontal"
         android:paddingEnd="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingStart="?android:attr/listPreferredItemPaddingRight"
-        android:text="Saved Heroes"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@android:color/white" />
+        android:paddingStart="?android:attr/listPreferredItemPaddingRight" >
 
         <TextView
+            android:id="@+id/drawer_battletag_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:text="Enter Battle Tag"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/drawer_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_edit" />
+    </LinearLayout>
+
+    <TextView
         android:id="@+id/tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        android:textColor="@android:color/darker_gray"
-        android:text="Tip: Long press to add/remove saved heroes." />
-        
+        android:text="Tip: Long press to add/remove saved heroes."
+        android:textColor="@android:color/darker_gray" />
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="5px"
