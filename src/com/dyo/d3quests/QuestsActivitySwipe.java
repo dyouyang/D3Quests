@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +67,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	private static String battleTagFull;
 
 	private static CompletedQuests completedQuests;
+	private static final int numQuests[] = {10, 10, 7, 4, 8};
 	private static boolean fullActCompleted[] = new boolean[5];
 
 	private List<D3ModelUpdateListener> modelUpdateListeners;
@@ -114,9 +117,12 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			// the adapter. Also specify this Activity object, which implements
 			// the TabListener interface, as the callback (listener) for when
 			// this tab is selected.
-			actionBar.addTab(actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(i))
-					.setTabListener(this));
+			Tab tab = actionBar.newTab()
+					.setCustomView(R.layout.tab_layout)
+					.setTabListener(this);
+			TextView tabText = (TextView) tab.getCustomView().findViewById(R.id.textview_act);
+			tabText.setText(mSectionsPagerAdapter.getPageTitle(i));
+			actionBar.addTab(tab);
 		}
 
 		// Gets the URL from the UI's text field.
@@ -423,6 +429,24 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 				completedQuests.getProgression().put(key, questsList);
 			}
 			completedQuests.setUpdated(true);
+
+
+			// Calculate if each act is complete.
+			for (int i = 1; i <= 5; i++) {
+				List<Quest> completed = completedQuests.getProgression().get(
+						"act" + i);
+
+				if (completed.size() == numQuests[i-1]) {
+					fullActCompleted[i - 1] = true;
+
+				} else {
+					// If not complete, set an icon in the tab view.
+					fullActCompleted[i - 1] = false;
+					ImageView notComplete = (ImageView) getActionBar().getTabAt(i-1).getCustomView().findViewById(R.id.not_complete);
+					notComplete.setVisibility(View.VISIBLE);
+				}
+			}
+
 			for (D3ModelUpdateListener listener : modelUpdateListeners) {
 				listener.onUpdateFinished();
 			}
