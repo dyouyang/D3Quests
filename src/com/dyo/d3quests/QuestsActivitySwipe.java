@@ -70,7 +70,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 	private static final int numQuests[] = {10, 10, 7, 4, 8};
 	private static boolean fullActCompleted[] = new boolean[5];
 
-	private List<D3ModelUpdateListener> modelUpdateListeners;
+	private static List<D3ModelUpdateListener> modelUpdateListeners;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -218,7 +218,6 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 			Bundle args = new Bundle();
 			args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
 			fragment.setArguments(args);
-			modelUpdateListeners.add((D3ModelUpdateListener) fragment);
 			return fragment;
 		}
 
@@ -299,6 +298,7 @@ public class QuestsActivitySwipe extends FragmentActivity implements
 
 	    	// Calculate quest completion on initialize of this fragment.
 	    	updateQuests();
+	    	modelUpdateListeners.add(this);
 			return rootView;
 		}
 
