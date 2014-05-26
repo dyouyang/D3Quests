@@ -9,6 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
@@ -35,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -308,16 +312,28 @@ public class HeroesActivity extends Activity implements OnNavigationListener, D3
 			});
     	}
 
-    	// Allow swipe down to refresh the list of heroes.
+    	// Swipe down will clear the hero list, and show the battle tag input field.  At some point,
+    	// this should change to refresh only, once users understand that the input is hidden.
     	refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
     	refreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
 			public void onRefresh() {
-				getHeroes.performClick();
+				heroesListAdapter.clear();
 				refreshLayout.setRefreshing(false);
 			}
 		});
+
+    	// Assign slide in and out animation to battle tag input.  We do this by modifying the
+    	// layout transition on the FrameLayout that wraps the battle tag input header.
+    	LayoutTransition transition = new LayoutTransition();
+    	AnimatorSet animatorOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.anim.slide_out_up);
+    	AnimatorSet animatorIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.anim.slide_in_down);
+    	transition.setAnimator(LayoutTransition.DISAPPEARING, animatorOut);
+    	transition.setAnimator(LayoutTransition.APPEARING, animatorIn);
+    	FrameLayout frame = (FrameLayout) findViewById(R.id.content_frame);
+    	frame.setLayoutTransition(transition);
+
 	}
 
 	@Override
