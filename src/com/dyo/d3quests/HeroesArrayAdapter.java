@@ -26,17 +26,20 @@ public class HeroesArrayAdapter extends ArrayAdapter<Hero> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.heroes_list_item, parent, false);
 
-		ImageView heroThumbnail = (ImageView) view.findViewById(R.id.hero_thumbnail);
-		TextView heroName = (TextView) view.findViewById(R.id.hero_name);
-		TextView heroDetails = (TextView) view.findViewById(R.id.hero_detail);
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.heroes_list_item, parent, false);
+		}
+
+		ImageView heroThumbnail = (ImageView) convertView.findViewById(R.id.hero_thumbnail);
+		TextView heroName = (TextView) convertView.findViewById(R.id.hero_name);
+		TextView heroDetails = (TextView) convertView.findViewById(R.id.hero_detail);
 
 		Hero hero = heroes.get(position);
 		heroName.setText(hero.getName());
 		heroDetails.setText(hero.getFormattedLevelAndClass());
 		heroThumbnail.setImageResource(imageByGenderAndClass(hero));
-		return view;
+		return convertView;
 	}
 
 	int imageByGenderAndClass(Hero hero) {
