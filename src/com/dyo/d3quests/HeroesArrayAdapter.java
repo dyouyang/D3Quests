@@ -27,15 +27,25 @@ public class HeroesArrayAdapter extends ArrayAdapter<Hero> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+		ImageView heroThumbnail;
+		TextView heroName;
+		TextView heroDetails;
+
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.heroes_list_item, parent, false);
+			heroThumbnail = (ImageView) convertView.findViewById(R.id.hero_thumbnail);
+			heroName = (TextView) convertView.findViewById(R.id.hero_name);
+			heroDetails = (TextView) convertView.findViewById(R.id.hero_detail);
+			convertView.setTag(new ViewHolder(heroThumbnail, heroName, heroDetails));
+		} else {
+			ViewHolder holder = (ViewHolder) convertView.getTag();
+			heroThumbnail = holder.heroThumbnail;
+			heroName = holder.heroName;
+			heroDetails = holder.heroDetails;
 		}
 
-		ImageView heroThumbnail = (ImageView) convertView.findViewById(R.id.hero_thumbnail);
-		TextView heroName = (TextView) convertView.findViewById(R.id.hero_name);
-		TextView heroDetails = (TextView) convertView.findViewById(R.id.hero_detail);
-
 		Hero hero = heroes.get(position);
+
 		heroName.setText(hero.getName());
 		heroDetails.setText(hero.getFormattedLevelAndClass());
 		heroThumbnail.setImageResource(imageByGenderAndClass(hero));
@@ -77,5 +87,17 @@ public class HeroesArrayAdapter extends ArrayAdapter<Hero> {
 
 		// Unknown class.
 		return R.drawable.ab_solid_ros;
+	}
+
+	static class ViewHolder {
+		ImageView heroThumbnail;
+		TextView heroName;
+		TextView heroDetails;
+
+		public ViewHolder(ImageView heroThumbnail, TextView heroName, TextView heroDetails) {
+			this.heroThumbnail = heroThumbnail;
+			this.heroName = heroName;
+			this.heroDetails = heroDetails;
+		}
 	}
 }
